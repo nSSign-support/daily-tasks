@@ -56,7 +56,13 @@
   
   input[type="checkbox"] { width: 26px; height: 26px; margin-right: 12px; accent-color: var(--orange); }
   
-  .footer { margin-top: 10px; padding: 12px; background: rgba(0,0,0,0.15); border-radius: 12px; color: #fff; text-align: left; font-size: 0.8rem; line-height: 1.5; font-weight: bold; text-shadow: 1px 1px 2px rgba(0,0,0,0.3); }
+  /* 下のコメント：文字を揃えるための特殊設定 */
+  .footer { margin-top: 10px; padding: 12px; background: rgba(0,0,0,0.15); border-radius: 12px; color: #fff; text-align: left; font-size: 0.8rem; line-height: 1.6; font-weight: bold; text-shadow: 1px 1px 2px rgba(0,0,0,0.3); }
+  .indent { 
+    padding-left: 1.2em; /* 全体の左余白 */
+    text-indent: -1.2em; /* 1行目だけ左に戻す */
+    display: block;
+  }
 </style>
 </head>
 <body>
@@ -82,9 +88,8 @@
 
   <div class="footer">
     <b>💡 カムバックが確定するまで</b><br>
-    ▶ IDOL CHAMPの💙は月末になったらチャートなどへ<br>
-    ▶ Fancastは有効期限が短いため<br>
-  　  自分のペースでルーティンに組み込んでください
+    <span class="indent">▶ IDOL CHAMPの💙は月末になったらチャートなどへ</span>
+    <span class="indent">▶ Fancastは有効期限が短いため<br>自分のペースでルーティンに組み込んでください</span>
   </div>
 </div>
 
