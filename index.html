@@ -43,7 +43,14 @@
   .limit-info { background: rgba(255,255,255,0.4); border-radius: 12px; padding: 10px; margin-bottom: 12px; color: #333; text-align: left; line-height: 1.4; font-weight: bold; }
   .limit-info b { color: var(--app-blue); background: #fff; padding: 1px 6px; border-radius: 4px; display: inline-block; margin-bottom: 2px; font-size: 0.8rem; }
   .limit-text { font-size: 0.65rem; white-space: nowrap; display: block; letter-spacing: -0.02em; } 
-  .heart-inline { color: var(--heart-red); font-weight: bold; }
+  
+  /* ハートを強制的に赤くする設定 */
+  .heart-inline { 
+    color: var(--heart-red) !important; 
+    font-weight: bold; 
+    font-style: normal;
+    -webkit-text-fill-color: var(--heart-red);
+  }
 
   .item { 
     background: #fff; display: flex; align-items: center; padding: 12px 15px; 
@@ -56,10 +63,10 @@
   
   input[type="checkbox"] { width: 26px; height: 26px; margin-right: 12px; accent-color: var(--orange); }
   
-  .footer { margin-top: 10px; padding: 12px; background: rgba(0,0,0,0.15); border-radius: 12px; color: #fff; text-align: left; line-height: 1.6; font-weight: bold; text-shadow: 1px 1px 2px rgba(0,0,0,0.3); }
+  .footer { margin-top: 10px; padding: 12px; background: rgba(0,0,0,0.15); border-radius: 12px; color: #fff; text-align: left; font-size: 0.8rem; line-height: 1.6; font-weight: bold; text-shadow: 1px 1px 2px rgba(0,0,0,0.3); }
   .footer b { font-size: 0.8rem; display: block; margin-bottom: 4px; }
   .indent { 
-    font-size: 0.62rem; /* さらにひとまわり小さく調整 */
+    font-size: 0.62rem;
     padding-left: 1.2em;
     text-indent: -1.2em;
     display: block;
@@ -76,18 +83,16 @@
   
   <div class="limit-info">
     <b>IDOL CHAMP</b>
-    <span class="limit-text">💙：毎月月末まで　<span class="heart-inline">❤</span>：獲得から90日（Ruby投票券にすると12/31まで）</span>
+    <span class="limit-text">💙：毎月月末まで　<span class="heart-inline">❤️</span>：獲得から90日（Ruby投票券にすると12/31まで）</span>
     <b>Fancast</b>
     <span class="limit-text">💙：獲得から30日（チェックイン・広告視聴分）</span>
   </div>
 
   <div id="list">
-    <!-- IDOL CHAMP タスク修正版 -->
     <label class="item"><input type="checkbox" id="t1" class="cb"><span><small class="app-tag">IDOL CHAMP</small>出席💙</span></label>
-    <label class="item"><input type="checkbox" id="t2" class="cb"><span><small class="app-tag">IDOL CHAMP</small>出席後広告視聴<span class="heart-inline">❤</span></span></label>
-    <label class="item"><input type="checkbox" id="t3" class="cb"><span><small class="app-tag">IDOL CHAMP</small>ルーレット<span class="heart-inline">❤</span></span></label>
+    <label class="item"><input type="checkbox" id="t2" class="cb"><span><small class="app-tag">IDOL CHAMP</small>出席後広告視聴<span class="heart-inline">❤️</span></span></label>
+    <label class="item"><input type="checkbox" id="t3" class="cb"><span><small class="app-tag">IDOL CHAMP</small>ルーレット<span class="heart-inline">❤️</span></span></label>
     
-    <!-- Fancast タスク -->
     <label class="item"><input type="checkbox" id="t4" class="cb"><span><small class="app-tag">Fancast</small>チェックイン💙</span></label>
     <label class="item"><input type="checkbox" id="t5" class="cb"><span><small class="app-tag">Fancast</small>広告視聴💙</span></label>
   </div>
