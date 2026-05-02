@@ -1,130 +1,81 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>投票アイテム収集リスト</title>
-<script src="https://jsdelivr.net"></script>
-<style>
-  :root {
-    --gold: #FFD700;
-    --orange: #FF8C00;
-    --red: #FF3D00;
-  }
-  body { margin: 0; background: #f0f2f5; font-family: sans-serif; display: flex; justify-content: center; }
-  
-  /* コンテナ軽量化版 */
-  .container { 
-    background: linear-gradient(135deg, var(--gold), var(--orange)); 
-    padding: 15px; border-radius: 24px; width: 90%; max-width: 360px; margin: 15px; 
-    text-align: center; box-shadow: 0 8px 20px rgba(0,0,0,0.1);
-    transition: background 0.8s;
-  }
-
-  /* 完了時の虹色背景（GPU負荷を抑えたアニメーション） */
-  .all-completed {
-    background: linear-gradient(45deg, #f3ec78, #af4261, #ab47bc, #4527a0);
-    background-size: 200% 200%;
-    animation: shine 4s linear infinite;
-  }
-  @keyframes shine { 0%{background-position:0% 50%} 50%{background-position:100% 50%} 100%{background-position:0% 50%} }
-
-  #today-date { font-size: 0.8rem; font-weight: bold; color: #fff; margin-bottom: 5px; display: block; opacity: 0.9; }
-  h2 { font-size: 1.5rem; font-weight: 900; margin: 0 0 10px; color: var(--red); -webkit-text-stroke: 1px #fff; text-shadow: 0 2px 4px rgba(0,0,0,0.2); }
-  
-  .limit-info { background: rgba(255,255,255,0.2); border-radius: 12px; padding: 8px; margin-bottom: 12px; color: #fff; font-size: 0.7rem; text-align: left; border: 1px solid rgba(255,255,255,0.2); }
-
-  /* 項目リスト */
-  .item { 
-    background: #fff; display: flex; align-items: center; padding: 12px 15px; 
-    border-radius: 15px; margin-bottom: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-    transition: 0.3s;
-  }
-  /* チェック後の半透明化 */
-  .item.is-completed { opacity: 0.4; transform: translateX(8px); }
-  
-  .item span { font-size: 1rem; color: #333; font-weight: bold; flex-grow: 1; text-align: left; }
-  input[type="checkbox"] { width: 24px; height: 24px; margin-right: 12px; accent-color: var(--orange); cursor: pointer; }
-  
-  .footer { margin-top: 10px; color: #fff; text-align: left; font-size: 0.6rem; line-height: 1.4; opacity: 0.9; }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>n.SSign Daily Tasks for COSMO</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f9f9f9;
+        }
+        .card {
+            background: #fff;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        h2 {
+            border-bottom: 2px solid #eee;
+            padding-bottom: 10px;
+            font-size: 1.25rem;
+        }
+        .app-name-blue {
+            color: #3131FF;
+            font-weight: bold;
+        }
+        .heart-red {
+            color: #FF0000;
+        }
+        ul {
+            padding-left: 20px;
+        }
+        li {
+            margin-bottom: 8px;
+        }
+        .footer-note {
+            background-color: #f0f4ff;
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+        }
+        hr {
+            border: 0;
+            border-top: 1px solid #eee;
+            margin: 20px 0;
+        }
+    </style>
 </head>
 <body>
 
-<div class="container" id="box">
-  <span id="date"></span>
-  <h2 id="title">投票アイテムを<br>集めよう！</h2>
-  
-  <div class="limit-info">
-    <b>IDOL CHAMP</b> 💙月末 ❤️90日<br><b>Fancast</b> 💙30日
-  </div>
+    <div class="card">
+        <h2>📱 アプリ別有効期限</h2>
 
-  <div id="list">
-    <label class="item"><input type="checkbox" id="t1" class="cb"><span>IDOL CHAMP 出席💙</span></label>
-    <label class="item"><input type="checkbox" id="t2" class="cb"><span>IDOL CHAMP 広告視聴❤️</span></label>
-    <label class="item"><input type="checkbox" id="t3" class="cb"><span>IDOL CHAMP ルーレット❤️</span></label>
-    <label class="item"><input type="checkbox" id="t4" class="cb"><span>Fancast チェックイン💙</span></label>
-    <label class="item"><input type="checkbox" id="t5" class="cb"><span>Fancast 広告視聴💙</span></label>
-  </div>
+        <h3 class="app-name-blue">IDOL CHAMP</h3>
+        <ul>
+            <li>💙：毎月月末まで</li>
+            <li><span class="heart-red">❤</span>：獲得から90日（Ruby投票券にすると12/31まで）</li>
+        </ul>
 
-  <div class="footer">
-    <b>💡 カムバ確定まで</b><br>アイチャン💙は月末にチャートへ。
-  </div>
-</div>
+        <h3 class="app-name-blue">Fancast</h3>
+        <ul>
+            <li>💙：獲得から30日（チェックイン・広告視聴分）</li>
+        </ul>
+    </div>
 
-<script>
-(() => {
-  const K_DATA = 'V_LIGHT_ST_V1';
-  const K_DATE = 'V_LIGHT_DT_V1';
-  const cbs = document.querySelectorAll('.cb');
-  const box = document.getElementById('box');
-  const title = document.getElementById('title');
+    <div class="card footer-note">
+        <p><strong>💡 カムバックが確定するまで</strong></p>
+        <ul>
+            <li>IDOL CHAMPの💙は月末になったらチャートなどへ</li>
+            <li>Fancastは有効期限が短いため 自分のペースでルーティンに組み込んでください</li>
+        </ul>
+    </div>
 
-  const update = (fire) => {
-    let ok = 0;
-    cbs.forEach(c => {
-      const p = c.closest('.item');
-      if(c.checked) { ok++; p.classList.add('is-completed'); }
-      else { p.classList.remove('is-completed'); }
-    });
-
-    if(ok === cbs.length) {
-      box.classList.add('all-completed');
-      title.innerHTML = "✨ COMPLETE ✨<br>お疲れ様でした！";
-      if(fire) confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
-    } else {
-      box.classList.remove('all-completed');
-      title.innerHTML = "投票アイテムを<br>集めよう！";
-    }
-  };
-
-  const save = () => {
-    const d = {};
-    cbs.forEach(c => d[c.id] = c.checked);
-    localStorage.setItem(K_DATA, JSON.stringify(d));
-    const now = new Date();
-    localStorage.setItem(K_DATE, now.getFullYear()+'-'+(now.getMonth()+1)+'-'+now.getDate());
-  };
-
-  const load = () => {
-    const n = new Date();
-    const today = n.getFullYear()+'-'+(n.getMonth()+1)+'-'+n.getDate();
-    document.getElementById('date').innerText = today.replace(/-/g, '/');
-
-    if(localStorage.getItem(K_DATE) !== today) {
-      localStorage.removeItem(K_DATA);
-      cbs.forEach(c => c.checked = false);
-    } else {
-      const s = JSON.parse(localStorage.getItem(K_DATA) || '{}');
-      cbs.forEach(c => c.checked = !!s[c.id]);
-    }
-    update(false);
-  };
-
-  cbs.forEach(c => c.addEventListener('change', () => { save(); update(true); }));
-  window.addEventListener('focus', load);
-  load();
-})();
-</script>
 </body>
 </html>
