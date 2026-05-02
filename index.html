@@ -4,136 +4,127 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>投票アイテム収集リスト</title>
-<!-- 読み込みエラーを防ぐためライブラリを最新の正しいURLに修正 -->
 <script src="https://jsdelivr.net"></script>
 <style>
   :root {
-    --primary-bg: linear-gradient(135deg, #FFD700, #FF8C00);
-    --success-bg: linear-gradient(45deg, #f3ec78, #af4261, #ab47bc, #4527a0);
+    --gold: #FFD700;
+    --orange: #FF8C00;
+    --red: #FF3D00;
   }
-  body { margin: 0; padding: 0; display: flex; justify-content: center; background-color: #f0f2f5; font-family: sans-serif; -webkit-font-smoothing: antialiased; }
-  .container { background: var(--primary-bg); padding: 15px 12px; border-radius: 24px; box-shadow: 0 10px 25px rgba(0,0,0,0.15); width: 92%; max-width: 380px; margin: 15px auto; text-align: center; transition: all 1s ease; min-height: 400px; }
+  body { margin: 0; background: #f0f2f5; font-family: sans-serif; display: flex; justify-content: center; }
   
-  /* 全達成時の虹色背景 */
-  .container.all-completed { background: var(--success-bg); background-size: 400% 400%; animation: gradientBG 5s ease infinite; transform: scale(1.02); }
-  @keyframes gradientBG { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+  /* コンテナ軽量化版 */
+  .container { 
+    background: linear-gradient(135deg, var(--gold), var(--orange)); 
+    padding: 15px; border-radius: 24px; width: 90%; max-width: 360px; margin: 15px; 
+    text-align: center; box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+    transition: background 0.8s;
+  }
+
+  /* 完了時の虹色背景（GPU負荷を抑えたアニメーション） */
+  .all-completed {
+    background: linear-gradient(45deg, #f3ec78, #af4261, #ab47bc, #4527a0);
+    background-size: 200% 200%;
+    animation: shine 4s linear infinite;
+  }
+  @keyframes shine { 0%{background-position:0% 50%} 50%{background-position:100% 50%} 100%{background-position:0% 50%} }
+
+  #today-date { font-size: 0.8rem; font-weight: bold; color: #fff; margin-bottom: 5px; display: block; opacity: 0.9; }
+  h2 { font-size: 1.5rem; font-weight: 900; margin: 0 0 10px; color: var(--red); -webkit-text-stroke: 1px #fff; text-shadow: 0 2px 4px rgba(0,0,0,0.2); }
   
-  #today-date { font-size: 0.9rem; font-weight: bold; color: rgba(255,255,255,0.9); margin-bottom: 4px; display: block; }
-  h2 { font-size: 1.6rem; font-weight: 900; margin: 0 0 10px 0; color: #FF3D00; -webkit-text-stroke: 1.5px #fff; paint-order: stroke fill; text-shadow: 0px 4px 8px rgba(0,0,0,0.2); }
-  
-  .limit-info { background: rgba(255, 255, 255, 0.2); border-radius: 10px; padding: 6px 10px; margin-bottom: 10px; color: #fff; font-size: 0.7rem; text-align: left; border: 1px solid rgba(255,255,255,0.3); line-height: 1.4; }
-  
-  /* リスト項目：ぜったいに消えないように設定 */
+  .limit-info { background: rgba(255,255,255,0.2); border-radius: 12px; padding: 8px; margin-bottom: 12px; color: #fff; font-size: 0.7rem; text-align: left; border: 1px solid rgba(255,255,255,0.2); }
+
+  /* 項目リスト */
   .item { 
-    background: #fff !important; 
-    display: flex !important; 
-    margin-bottom: 8px; 
-    padding: 14px 16px; 
-    border-radius: 14px; 
-    align-items: center; 
-    box-shadow: 0 2px 4px rgba(0,0,0,0.08); 
-    transition: all 0.4s ease;
+    background: #fff; display: flex; align-items: center; padding: 12px 15px; 
+    border-radius: 15px; margin-bottom: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    transition: 0.3s;
   }
+  /* チェック後の半透明化 */
+  .item.is-completed { opacity: 0.4; transform: translateX(8px); }
   
-  /* チェックを入れたら半透明 */
-  .item.is-completed { opacity: 0.35 !important; transform: translateX(10px); }
-  .item span { font-size: 1.05rem; color: #222; font-weight: 700; }
-  input[type="checkbox"] { width: 26px; height: 26px; margin-right: 12px; accent-color: #FF8C00; flex-shrink: 0; }
+  .item span { font-size: 1rem; color: #333; font-weight: bold; flex-grow: 1; text-align: left; }
+  input[type="checkbox"] { width: 24px; height: 24px; margin-right: 12px; accent-color: var(--orange); cursor: pointer; }
   
-  .footer-notes { margin-top: 10px; padding: 0 5px; color: rgba(255,255,255,0.95); text-align: left; font-size: 0.6rem; }
+  .footer { margin-top: 10px; color: #fff; text-align: left; font-size: 0.6rem; line-height: 1.4; opacity: 0.9; }
 </style>
 </head>
 <body>
 
-<div class="container" id="main-container">
-  <span id="today-date"></span>
-  <h2 id="main-title">投票アイテムを<br>集めよう！</h2>
+<div class="container" id="box">
+  <span id="date"></span>
+  <h2 id="title">投票アイテムを<br>集めよう！</h2>
+  
   <div class="limit-info">
-    <b>IDOL CHAMP</b> 💙月末 ❤️90日 / <b>Fancast</b> 💙30日
+    <b>IDOL CHAMP</b> 💙月末 ❤️90日<br><b>Fancast</b> 💙30日
   </div>
 
-  <div id="checklist">
-    <label class="item"><input type="checkbox" id="task1" class="daily-check"><span>IDOL CHAMP 出席💙</span></label>
-    <label class="item"><input type="checkbox" id="task2" class="daily-check"><span>IDOL CHAMP 広告視聴❤️</span></label>
-    <label class="item"><input type="checkbox" id="task3" class="daily-check"><span>IDOL CHAMP ルーレット❤️</span></label>
-    <label class="item"><input type="checkbox" id="task4" class="daily-check"><span>Fancast チェックイン💙</span></label>
-    <label class="item"><input type="checkbox" id="task5" class="daily-check"><span>Fancast 広告視聴💙</span></label>
+  <div id="list">
+    <label class="item"><input type="checkbox" id="t1" class="cb"><span>IDOL CHAMP 出席💙</span></label>
+    <label class="item"><input type="checkbox" id="t2" class="cb"><span>IDOL CHAMP 広告視聴❤️</span></label>
+    <label class="item"><input type="checkbox" id="t3" class="cb"><span>IDOL CHAMP ルーレット❤️</span></label>
+    <label class="item"><input type="checkbox" id="t4" class="cb"><span>Fancast チェックイン💙</span></label>
+    <label class="item"><input type="checkbox" id="t5" class="cb"><span>Fancast 広告視聴💙</span></label>
   </div>
 
-  <div class="footer-notes">
-    <b>💡 カムバックが確定するまで</b><br>
-    IDOL CHAMPの💙は月末になったらチャートへ。
+  <div class="footer">
+    <b>💡 カムバ確定まで</b><br>アイチャン💙は月末にチャートへ。
   </div>
 </div>
 
 <script>
-document.addEventListener('DOMContentLoaded', () => {
-    // 完全に新しいデータ保存場所（V10）
-    const S_KEY = 'DAILY_V10_STATE';
-    const D_KEY = 'DAILY_V10_DATE';
-    
-    const checkboxes = document.querySelectorAll('.daily-check');
-    const titleEl = document.getElementById('main-title');
-    const containerEl = document.getElementById('main-container');
-    const dateDisplay = document.getElementById('today-date');
+(() => {
+  const K_DATA = 'V_LIGHT_ST_V1';
+  const K_DATE = 'V_LIGHT_DT_V1';
+  const cbs = document.querySelectorAll('.cb');
+  const box = document.getElementById('box');
+  const title = document.getElementById('title');
 
-    const getToday = () => {
-        const n = new Date();
-        return n.getFullYear() + '-' + (n.getMonth() + 1) + '-' + n.getDate();
-    };
-
-    const updateUI = (withConfetti = false) => {
-        let checkedCount = 0;
-        checkboxes.forEach(cb => {
-            const row = cb.closest('.item');
-            if (cb.checked) {
-                checkedCount++;
-                row.classList.add('is-completed');
-            } else {
-                row.classList.remove('is-completed');
-            }
-        });
-
-        if (checkedCount === checkboxes.length) {
-            titleEl.innerHTML = "✨ ALL CLEAR ✨<br>お疲れ様でした！";
-            containerEl.classList.add('all-completed');
-            if(withConfetti && typeof confetti === 'function') {
-                confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
-            }
-        } else {
-            titleEl.innerHTML = "投票アイテムを<br>集めよう！";
-            containerEl.classList.remove('all-completed');
-        }
-    };
-
-    const loadData = () => {
-        const today = getToday();
-        const savedDate = localStorage.getItem(D_KEY);
-        dateDisplay.innerText = today.replace(/-/g, '/');
-
-        if (savedDate !== today) {
-            localStorage.removeItem(S_KEY);
-            checkboxes.forEach(cb => cb.checked = false);
-            localStorage.setItem(D_KEY, today);
-        } else {
-            const savedState = JSON.parse(localStorage.getItem(S_KEY) || '{}');
-            checkboxes.forEach(cb => cb.checked = !!savedState[cb.id]);
-        }
-        updateUI(false);
-    };
-
-    checkboxes.forEach(cb => {
-        cb.addEventListener('change', () => {
-            const state = {};
-            checkboxes.forEach(c => state[c.id] = c.checked);
-            localStorage.setItem(S_KEY, JSON.stringify(state));
-            updateUI(true);
-        });
+  const update = (fire) => {
+    let ok = 0;
+    cbs.forEach(c => {
+      const p = c.closest('.item');
+      if(c.checked) { ok++; p.classList.add('is-completed'); }
+      else { p.classList.remove('is-completed'); }
     });
 
-    window.addEventListener('focus', loadData);
-    loadData();
-});
+    if(ok === cbs.length) {
+      box.classList.add('all-completed');
+      title.innerHTML = "✨ COMPLETE ✨<br>お疲れ様でした！";
+      if(fire) confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+    } else {
+      box.classList.remove('all-completed');
+      title.innerHTML = "投票アイテムを<br>集めよう！";
+    }
+  };
+
+  const save = () => {
+    const d = {};
+    cbs.forEach(c => d[c.id] = c.checked);
+    localStorage.setItem(K_DATA, JSON.stringify(d));
+    const now = new Date();
+    localStorage.setItem(K_DATE, now.getFullYear()+'-'+(now.getMonth()+1)+'-'+now.getDate());
+  };
+
+  const load = () => {
+    const n = new Date();
+    const today = n.getFullYear()+'-'+(n.getMonth()+1)+'-'+n.getDate();
+    document.getElementById('date').innerText = today.replace(/-/g, '/');
+
+    if(localStorage.getItem(K_DATE) !== today) {
+      localStorage.removeItem(K_DATA);
+      cbs.forEach(c => c.checked = false);
+    } else {
+      const s = JSON.parse(localStorage.getItem(K_DATA) || '{}');
+      cbs.forEach(c => c.checked = !!s[c.id]);
+    }
+    update(false);
+  };
+
+  cbs.forEach(c => c.addEventListener('change', () => { save(); update(true); }));
+  window.addEventListener('focus', load);
+  load();
+})();
 </script>
 </body>
 </html>
