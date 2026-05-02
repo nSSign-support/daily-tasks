@@ -4,11 +4,11 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>投票アイテム収集リスト</title>
-<!-- キラキラ演出ライブラリ -->
+<!-- キラキラ演出ライブラリ (Canvas Confetti) -->
 <script src="https://jsdelivr.net"></script>
 <style>
   body { margin: 0; padding: 0; display: flex; justify-content: center; background-color: #f0f2f5; font-family: sans-serif; -webkit-font-smoothing: antialiased; }
-  .container { background: linear-gradient(135deg, #FFD700, #FF8C00); padding: 15px 12px; border-radius: 24px; box-shadow: 0 10px 25px rgba(0,0,0,0.15); width: 92%; max-width: 380px; margin: 15px auto; text-align: center; }
+  .container { background: linear-gradient(135deg, #FFD700, #FF8C00); padding: 15px 12px; border-radius: 24px; box-shadow: 0 10px 25px rgba(0,0,0,0.15); width: 92%; max-width: 380px; margin: 15px auto; text-align: center; position: relative; overflow: hidden; }
   #today-date { font-size: 0.9rem; font-weight: bold; color: rgba(255,255,255,0.9); margin-bottom: 4px; display: block; }
   h2 { font-size: 1.6rem; font-weight: 900; margin: 0 0 10px 0; letter-spacing: 0.05em; color: #FF3D00; line-height: 1.2; -webkit-text-stroke: 1.5px #fff; paint-order: stroke fill; text-shadow: 0px 4px 8px rgba(0,0,0,0.2); transition: all 0.5s ease; }
   .limit-info { background: rgba(255, 255, 255, 0.2); border-radius: 10px; padding: 6px 10px; margin-bottom: 10px; color: #fff; font-size: 0.7rem; text-align: left; line-height: 1.2; border: 1px solid rgba(255,255,255,0.3); }
@@ -19,7 +19,8 @@
   .item span { font-size: 1.05rem; color: #222; font-weight: 700; line-height: 1.2; }
   
   /* 完了時にスライドして消える演出 */
-  .item.is-completed { transform: translateX(50px); opacity: 0; pointer-events: none; margin-bottom: -50px; }
+  .item.is-completed { transform: translateX(110%); opacity: 0; pointer-events: none; }
+  .item.hidden { display: none; }
   
   input[type="checkbox"] { width: 26px; height: 26px; margin-right: 12px; accent-color: #FF8C00; flex-shrink: 0; }
   .footer-notes { margin-top: 10px; padding: 0 5px; color: rgba(255,255,255,0.95); text-align: left; }
@@ -52,87 +53,121 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', () => {
-    const STORAGE_KEY = 'VOTE_LIST_STATE_V1';
-    const DATE_KEY = 'VOTE_LIST_DATE_V1';
+    const STORAGE_KEY = 'VOTE_LIST_STATE_V2';
+    const DATE_KEY = 'VOTE_LIST_DATE_V2';
     const checkboxes = document.querySelectorAll('.daily-check');
     const titleEl = document.getElementById('main-title');
     const dateDisplay = document.getElementById('today-date');
 
-    const getToday = () => {
+    // 現在の日付を取得 (YYYY-MM-DD形式)
+    const getTodayString = () => {
         const n = new Date();
         return `${n.getFullYear()}-${n.getMonth() + 1}-${n.getDate()}`;
     };
 
-    const updateUI = (withAnimation = false) => {
+    // UIの更新（チェック状態に合わせて表示を切り替え）
+    const updateUI = (isUserAction = false) => {
         let checkedCount = 0;
+        
         checkboxes.forEach(cb => {
             const parent = cb.closest('.item');
             if (cb.checked) {
                 checkedCount++;
                 parent.classList.add('is-completed');
-                setTimeout(() => { parent.style.display = 'none'; }, 400);
+                // アニメーション後に非表示にする
+                setTimeout(() => { if(cb.checked) parent.classList.add('hidden'); }, 400);
             } else {
-                parent.classList.remove('is-completed');
-                parent.style.display = 'flex';
+                parent.classList.remove('is-completed', 'hidden');
             }
         });
 
+        // 全てチェックされた時の判定
         if (checkedCount === checkboxes.length && checkboxes.length > 0) {
             titleEl.innerHTML = "全ミッション<br>完了！✨";
             titleEl.style.color = "#FFD700";
-            if(withAnimation) playConfetti();
+            if(isUserAction) playSuccessCelebration();
         } else {
             titleEl.innerHTML = "投票アイテムを<br>集めよう！";
             titleEl.style.color = "#FF3D00";
         }
     };
 
-    const playConfetti = () => {
-        confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 }, colors: ['#FFD700', '#FF8C00', '#FF3D00'] });
+    // 豪華なキラキラ演出
+    const playSuccessCelebration = () => {
+        const duration = 3 * 1000;
+        const end = Date.now() + duration;
+
+        (function frame() {
+            confetti({
+                particleCount: 3,
+                angle: 60,
+                spread: 55,
+                origin: { x: 0 },
+                colors: ['#FFD700', '#FFFFFF', '#FF8C00']
+            });
+            confetti({
+                particleCount: 3,
+                angle: 120,
+                spread: 55,
+                origin: { x: 1 },
+                colors: ['#FFD700', '#FFFFFF', '#FF8C00']
+            });
+
+            if (Date.now() < end) {
+                requestAnimationFrame(frame);
+            }
+        }());
     };
 
+    // データの保存
     const saveData = () => {
         const state = {};
         checkboxes.forEach(cb => { state[cb.id] = cb.checked; });
         localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+        localStorage.setItem(DATE_KEY, getTodayString());
     };
 
-    const loadData = () => {
-        const today = getToday();
+    // データの読み込みとリセット判定
+    const loadAndCheckReset = () => {
+        const today = getTodayString();
+        const savedDate = localStorage.getItem(DATE_KEY);
+        
         dateDisplay.innerText = today.replace(/-/g, '/');
 
-        // 0時リセット判定
-        if (localStorage.getItem(DATE_KEY) !== today) {
+        // 日付が変わっていたらリセット
+        if (savedDate !== today) {
             localStorage.removeItem(STORAGE_KEY);
-            localStorage.setItem(DATE_KEY, today);
-            updateUI();
-            return;
+            checkboxes.forEach(cb => cb.checked = false);
+            saveData(); // 新しい日付を保存
+        } else {
+            const savedState = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+            checkboxes.forEach(cb => {
+                cb.checked = !!savedState[cb.id];
+            });
         }
-
-        const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
-        checkboxes.forEach(cb => {
-            if (saved[cb.id]) cb.checked = true;
-        });
         updateUI(false);
     };
 
+    // イベントリスナー：チェックボックス
     checkboxes.forEach(cb => {
         cb.addEventListener('change', () => {
             if (cb.checked) {
-                // 個別のキラキラ演出（オプション）
-                confetti({ particleCount: 30, spread: 50, origin: { y: 0.8 } });
+                // 1つチェックした時の軽い演出
+                confetti({ particleCount: 15, spread: 40, origin: { y: 0.7 }, colors: ['#FFD700'] });
             }
             saveData();
             updateUI(true);
         });
     });
 
-    // アプリ復帰時のチェック
+    // 放置後の復帰対策（タブ切り替えやスマホのスリープ解除時）
     document.addEventListener('visibilitychange', () => {
-        if (document.visibilityState === 'visible') loadData();
+        if (document.visibilityState === 'visible') loadAndCheckReset();
     });
+    window.addEventListener('focus', loadAndCheckReset);
 
-    loadData();
+    // 初回実行
+    loadAndCheckReset();
 });
 </script>
 </body>
