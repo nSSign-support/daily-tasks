@@ -35,29 +35,29 @@
   
   .limit-info { background: rgba(255,255,255,0.4); border-radius: 12px; padding: 10px; margin-bottom: 12px; color: #333; text-align: left; line-height: 1.4; font-weight: bold; }
   .limit-info b { color: var(--app-blue); background: #fff; padding: 1px 6px; border-radius: 4px; display: inline-block; margin-bottom: 2px; font-size: 0.8rem; }
-  .limit-text { font-size: 0.65rem; white-space: nowrap; display: flex; align-items: center; letter-spacing: -0.02em; } 
+  .limit-text { font-size: 0.65rem; white-space: nowrap; display: flex; align-items: center; flex-wrap: wrap; letter-spacing: -0.02em; } 
   
-  /* 【重要】CSSで描画する赤いハートの設定 */
+  /* ハートの描画設定：文字と一緒に並ぶように調整 */
   .css-heart {
     display: inline-block;
-    width: 0.8em;
-    height: 0.8em;
+    width: 0.7em;
+    height: 0.7em;
     background-color: var(--heart-red);
     position: relative;
     transform: rotate(45deg);
-    margin: 0 0.4em 0 0.2em;
-    vertical-align: middle;
+    margin: 0 0.4em 0 0.3em; /* 左右の余白 */
+    vertical-align: baseline; /* 文字の高さに合わせる */
   }
   .css-heart::before, .css-heart::after {
     content: "";
-    width: 0.8em;
-    height: 0.8em;
+    width: 0.7em;
+    height: 0.7em;
     background-color: var(--heart-red);
     border-radius: 50%;
     position: absolute;
   }
-  .css-heart::before { left: -0.4em; top: 0; }
-  .css-heart::after { left: 0; top: -0.4em; }
+  .css-heart::before { left: -0.35em; top: 0; }
+  .css-heart::after { left: 0; top: -0.35em; }
 
   .item { 
     background: #fff; display: flex; align-items: center; padding: 12px 15px; 
@@ -65,9 +65,8 @@
   }
   .item.is-completed { opacity: 0.4; transform: translateX(8px); }
   
-  .item span { font-size: 1rem; color: #333; font-weight: bold; flex-grow: 1; text-align: left; display: flex; align-items: center; }
-  .app-tag { color: var(--app-blue); font-size: 0.75rem; display: block; margin-bottom: 2px; font-weight: bold; width: 100%; }
-  .item-content { flex-direction: column; display: flex; }
+  .item span { font-size: 1rem; color: #333; font-weight: bold; flex-grow: 1; text-align: left; line-height: 1.2; }
+  .app-tag { color: var(--app-blue); font-size: 0.75rem; display: block; margin-bottom: 2px; font-weight: bold; }
   
   input[type="checkbox"] { width: 26px; height: 26px; margin-right: 12px; accent-color: var(--orange); flex-shrink: 0; }
   
@@ -90,27 +89,12 @@
   </div>
 
   <div id="list">
-    <label class="item">
-      <input type="checkbox" id="t1" class="cb">
-      <span class="item-content"><small class="app-tag">IDOL CHAMP</small>出席💙</span>
-    </label>
-    <label class="item">
-      <input type="checkbox" id="t2" class="cb">
-      <span class="item-content"><small class="app-tag">IDOL CHAMP</small>出席後広告視聴<span><span class="css-heart"></span></span></span>
-    </label>
-    <label class="item">
-      <input type="checkbox" id="t3" class="cb">
-      <span class="item-content"><small class="app-tag">IDOL CHAMP</small>ルーレット<span><span class="css-heart"></span></span></span>
-    </label>
+    <label class="item"><input type="checkbox" id="t1" class="cb"><span><small class="app-tag">IDOL CHAMP</small>出席💙</span></label>
+    <label class="item"><input type="checkbox" id="t2" class="cb"><span><small class="app-tag">IDOL CHAMP</small>出席後広告視聴<span class="css-heart"></span></span></label>
+    <label class="item"><input type="checkbox" id="t3" class="cb"><span><small class="app-tag">IDOL CHAMP</small>ルーレット<span class="css-heart"></span></span></label>
     
-    <label class="item">
-      <input type="checkbox" id="t4" class="cb">
-      <span class="item-content"><small class="app-tag">Fancast</small>チェックイン💙</span>
-    </label>
-    <label class="item">
-      <input type="checkbox" id="t5" class="cb">
-      <span class="item-content"><small class="app-tag">Fancast</small>広告視聴💙</span>
-    </label>
+    <label class="item"><input type="checkbox" id="t4" class="cb"><span><small class="app-tag">Fancast</small>チェックイン💙</span></label>
+    <label class="item"><input type="checkbox" id="t5" class="cb"><span><small class="app-tag">Fancast</small>広告視聴💙</span></label>
   </div>
 
   <div class="footer">
