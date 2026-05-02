@@ -9,7 +9,7 @@
   :root {
     --gold: #FFD700;
     --orange: #FF8C00;
-    --red: #FF3D00;
+    --red: #D32F2F; /* 文字が見やすい少し濃い赤に変更 */
     --app-blue: #3131FF;
     --heart-red: #FF0000;
   }
@@ -31,34 +31,34 @@
 
   #date { font-size: 0.9rem; font-weight: bold; color: #fff; margin-bottom: 5px; display: block; text-shadow: 1px 1px 2px rgba(0,0,0,0.3); }
   
-  /* タイトル：エッジを太くし、影を強くしました */
+  /* 縁取りをやめて、濃い色と影で読みやすくしたタイトル */
   h2 { 
     font-size: 1.6rem; 
     font-weight: 900; 
     margin: 0 0 10px; 
-    color: var(--red); 
-    -webkit-text-stroke: 1.5px #fff; /* エッジを太く */
-    text-shadow: 2px 2px 0px #fff, 3px 3px 5px rgba(0,0,0,0.3); /* 影を強化 */
+    color: #fff; /* 文字色を白にして */
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.4); /* 濃い影で浮かせる */
     line-height: 1.3;
+    -webkit-text-stroke: 0; /* 縁取りを廃止 */
   }
   
-  .limit-info { background: rgba(255,255,255,0.3); border-radius: 12px; padding: 12px; margin-bottom: 12px; color: #333; font-size: 0.8rem; text-align: left; border: 2px solid rgba(255,255,255,0.5); line-height: 1.6; font-weight: bold; }
-  .limit-info b { color: var(--app-blue); background: #fff; padding: 1px 6px; border-radius: 4px; display: inline-block; margin-bottom: 4px; box-shadow: 1px 1px 2px rgba(0,0,0,0.1); }
+  .limit-info { background: rgba(255,255,255,0.4); border-radius: 12px; padding: 12px; margin-bottom: 12px; color: #333; font-size: 0.8rem; text-align: left; border: none; line-height: 1.6; font-weight: bold; }
+  .limit-info b { color: var(--app-blue); background: #fff; padding: 1px 6px; border-radius: 4px; display: inline-block; margin-bottom: 2px; }
   .heart-inline { color: var(--heart-red); font-weight: bold; }
 
   .item { 
     background: #fff; display: flex; align-items: center; padding: 12px 15px; 
     border-radius: 15px; margin-bottom: 8px; box-shadow: 0 3px 6px rgba(0,0,0,0.1);
-    transition: 0.3s;
   }
   .item.is-completed { opacity: 0.4; transform: translateX(8px); }
   
-  .item span { font-size: 1rem; color: #333; font-weight: 800; flex-grow: 1; text-align: left; }
-  .app-tag { color: var(--app-blue); font-size: 0.75rem; display: block; margin-bottom: 2px; font-weight: 900; }
+  .item span { font-size: 1rem; color: #333; font-weight: bold; flex-grow: 1; text-align: left; }
+  .app-tag { color: var(--app-blue); font-size: 0.75rem; display: block; margin-bottom: 2px; font-weight: bold; }
   
-  input[type="checkbox"] { width: 26px; height: 26px; margin-right: 12px; accent-color: var(--orange); cursor: pointer; }
+  input[type="checkbox"] { width: 26px; height: 26px; margin-right: 12px; accent-color: var(--orange); }
   
-  .footer { margin-top: 10px; padding: 12px; background: rgba(0,0,0,0.15); border-radius: 12px; color: #fff; text-align: left; font-size: 0.8rem; line-height: 1.6; font-weight: bold; text-shadow: 1px 1px 2px rgba(0,0,0,0.2); }
+  /* 下のコメント：中間の改行を削除 */
+  .footer { margin-top: 10px; padding: 12px; background: rgba(0,0,0,0.15); border-radius: 12px; color: #fff; text-align: left; font-size: 0.8rem; line-height: 1.6; font-weight: bold; text-shadow: 1px 1px 2px rgba(0,0,0,0.3); }
 </style>
 </head>
 <body>
@@ -69,8 +69,7 @@
   
   <div class="limit-info">
     <b>IDOL CHAMP</b><br>
-    💙：毎月月末まで<br>
-    <span class="heart-inline">❤</span>：獲得から90日（Ruby投票券にすると12/31まで）<br><br>
+    💙：毎月月末まで　<span class="heart-inline">❤</span>：獲得から90日（Ruby投票券にすると12/31まで）<br><br>
     <b>Fancast</b><br>
     💙：獲得から30日（チェックイン・広告視聴分）
   </div>
@@ -85,9 +84,8 @@
 
   <div class="footer">
     <b>💡 カムバックが確定するまで</b><br>
-    IDOL CHAMPの💙は月末になったらチャートなどへ<br><br>
-    Fancastは有効期限が短いため<br>
-    自分のペースでルーティンに組み込んでください
+    IDOL CHAMPの💙は月末になったらチャートなどへ<br>
+    Fancastは有効期限が短いため自分のペースでルーティンに組み込んでください
   </div>
 </div>
 
@@ -109,7 +107,6 @@
 
     if(ok === cbs.length) {
       box.classList.add('all-completed');
-      /* コンプリート文字も太くくっきりさせました */
       title.innerHTML = "✨ COMPLETE ✨<br>お疲れ様でした！";
       if(fire) confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
     } else {
