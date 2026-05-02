@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Checklist</title>
+    <style>
+        body { font-family: sans-serif; background: #f0f2f5; padding: 20px; display: flex; flex-direction: column; align-items: center; }
+        .list { width: 100%; max-width: 400px; }
+        .item {
+            background: #fff; padding: 16px; border-radius: 12px; margin-bottom: 10px;
+            display: flex; align-items: center; box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            transition: 0.4s ease;
+        }
+        .item.hidden { transform: translateX(50px); opacity: 0; pointer-events: none; }
+        input { width: 24px; height: 24px; margin-right: 12px; cursor: pointer; }
+        span { font-weight: bold; color: #333; }
+        #date { margin-top: 20px; color: #888; font-size: 12px; }
+    </style>
+</head>
+<body>
+    <h2>DAILY CHECKLIST</h2>
+    <div class="list">
+        <label class="item"><input type="checkbox" class="cb" id="t1"><span>項目 1</span></label>
+        <label class="item"><input type="checkbox" class="cb" id="t2"><span>項目 2</span></label>
+        <label class="item"><input type="checkbox" class="cb" id="t3"><span>項目 3</span></label>
+        <label class="item"><input type="checkbox" class="cb" id="t4"><span>項目 4</span></label>
+        <label class="item"><input type="checkbox" class="cb" id="t5"><span>項目 5</span></label>
+    </div>
+    <div id="date"></div>
+
+    <script src="https://jsdelivr.net"></script>
+    <script>
+        const S_KEY = 'MY_TASK_S';
+        const D_KEY = 'MY_TASK_D';
+        const checks = document.querySelectorAll('.cb');
+
+        function init() {
+            const today = new Date().toLocaleDateString();
+            document.getElementById('date').innerText = "Today: " + today;
+
+            if (localStorage.getItem(D_KEY) !== today) {
+                localStorage.clear();
+                localStorage.setItem(D_KEY, today);
+            }
+
+            const saved = JSON.parse(localStorage.getItem(S_KEY) || '{}');
+            checks.forEach(c => {
+                if (saved[c.id]) {
+                    c.checked = true;
+                    c.closest('.item').style.display = 'none';
+                }
+                c.addEventListener('change', () => {
+                    if (c.checked) {
+                        if (window.confetti) confetti({ particleCount: 60, spread: 60, origin: { y: 0.7 } });
+                        const p = c.closest('.item');
+                        p.classList.add('hidden');
+                        setTimeout(() => {
+                            p.style.display = 'none';
+                            const state = {};
+                            checks.forEach(el => state[el.id] = el.checked);
+                            localStorage.setItem(S_KEY, JSON.stringify(state));
+                        }, 400);
+                    }
+                });
+            });
+        }
+        window.onload = init;
+    </script>
+</body>
+</html>
