@@ -56,15 +56,15 @@
   
   input[type="checkbox"] { width: 26px; height: 26px; margin-right: 12px; accent-color: var(--orange); }
   
-  /* 下のコメント：有効期限の文字サイズ（0.65rem相当）に合わせました */
   .footer { margin-top: 10px; padding: 12px; background: rgba(0,0,0,0.15); border-radius: 12px; color: #fff; text-align: left; line-height: 1.6; font-weight: bold; text-shadow: 1px 1px 2px rgba(0,0,0,0.3); }
   .footer b { font-size: 0.8rem; display: block; margin-bottom: 4px; }
   .indent { 
-    font-size: 0.68rem; /* 有効期限の文字サイズに近い大きさに調整 */
+    font-size: 0.62rem; /* さらにひとまわり小さく調整 */
     padding-left: 1.2em;
     text-indent: -1.2em;
     display: block;
     letter-spacing: -0.01em;
+    opacity: 0.95;
   }
 </style>
 </head>
@@ -82,9 +82,12 @@
   </div>
 
   <div id="list">
+    <!-- IDOL CHAMP タスク修正版 -->
     <label class="item"><input type="checkbox" id="t1" class="cb"><span><small class="app-tag">IDOL CHAMP</small>出席💙</span></label>
-    <label class="item"><input type="checkbox" id="t2" class="cb"><span><small class="app-tag">IDOL CHAMP</small>広告視聴<span class="heart-inline">❤</span></span></label>
+    <label class="item"><input type="checkbox" id="t2" class="cb"><span><small class="app-tag">IDOL CHAMP</small>出席後広告視聴<span class="heart-inline">❤</span></span></label>
     <label class="item"><input type="checkbox" id="t3" class="cb"><span><small class="app-tag">IDOL CHAMP</small>ルーレット<span class="heart-inline">❤</span></span></label>
+    
+    <!-- Fancast タスク -->
     <label class="item"><input type="checkbox" id="t4" class="cb"><span><small class="app-tag">Fancast</small>チェックイン💙</span></label>
     <label class="item"><input type="checkbox" id="t5" class="cb"><span><small class="app-tag">Fancast</small>広告視聴💙</span></label>
   </div>
