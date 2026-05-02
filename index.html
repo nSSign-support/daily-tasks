@@ -4,23 +4,24 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>投票アイテム収集リスト</title>
-<!-- キラキラ演出ライブラリ (Canvas Confetti) -->
+<!-- キラキラ演出用ライブラリ -->
 <script src="https://jsdelivr.net"></script>
 <style>
   body { margin: 0; padding: 0; display: flex; justify-content: center; background-color: #f0f2f5; font-family: sans-serif; -webkit-font-smoothing: antialiased; }
-  .container { background: linear-gradient(135deg, #FFD700, #FF8C00); padding: 15px 12px; border-radius: 24px; box-shadow: 0 10px 25px rgba(0,0,0,0.15); width: 92%; max-width: 380px; margin: 15px auto; text-align: center; position: relative; overflow: hidden; }
+  .container { background: linear-gradient(135deg, #FFD700, #FF8C00); padding: 15px 12px; border-radius: 24px; box-shadow: 0 10px 25px rgba(0,0,0,0.15); width: 92%; max-width: 380px; margin: 15px auto; text-align: center; position: relative; overflow: hidden; min-height: 450px; }
   #today-date { font-size: 0.9rem; font-weight: bold; color: rgba(255,255,255,0.9); margin-bottom: 4px; display: block; }
   h2 { font-size: 1.6rem; font-weight: 900; margin: 0 0 10px 0; letter-spacing: 0.05em; color: #FF3D00; line-height: 1.2; -webkit-text-stroke: 1.5px #fff; paint-order: stroke fill; text-shadow: 0px 4px 8px rgba(0,0,0,0.2); transition: all 0.5s ease; }
   .limit-info { background: rgba(255, 255, 255, 0.2); border-radius: 10px; padding: 6px 10px; margin-bottom: 10px; color: #fff; font-size: 0.7rem; text-align: left; line-height: 1.2; border: 1px solid rgba(255,255,255,0.3); }
   .limit-info b { color: #FF3D00; font-size: 0.78rem; display: block; margin-bottom: 0px; }
   .limit-section { margin-bottom: 4px; }
   
+  /* チェックリストのスタイル */
   .item { background: #fff; margin-bottom: 8px; padding: 14px 16px; border-radius: 14px; display: flex; align-items: center; box-shadow: 0 2px 4px rgba(0,0,0,0.08); text-align: left; transition: all 0.4s ease; cursor: pointer; }
   .item span { font-size: 1.05rem; color: #222; font-weight: 700; line-height: 1.2; }
   
-  /* 完了時にスライドして消える演出 */
+  /* 完了時に右へ消えるアニメーション */
   .item.is-completed { transform: translateX(110%); opacity: 0; pointer-events: none; }
-  .item.hidden { display: none; }
+  .item.hidden { display: none !important; }
   
   input[type="checkbox"] { width: 26px; height: 26px; margin-right: 12px; accent-color: #FF8C00; flex-shrink: 0; }
   .footer-notes { margin-top: 10px; padding: 0 5px; color: rgba(255,255,255,0.95); text-align: left; }
@@ -33,10 +34,12 @@
 <div class="container">
   <span id="today-date"></span>
   <h2 id="main-title">投票アイテムを<br>集めよう！</h2>
+  
   <div class="limit-info">
     <div class="limit-section"><b>IDOL CHAMP</b><span>💙月末まで ❤️獲得から90日</span></div>
     <div class="limit-section"><b>Fancast</b><span>💙獲得から30日</span></div>
   </div>
+
   <div id="checklist">
     <label class="item"><input type="checkbox" id="v1" class="daily-check"><span>IDOL CHAMP 出席💙</span></label>
     <label class="item"><input type="checkbox" id="v2" class="daily-check"><span>IDOL CHAMP 広告視聴❤️</span></label>
@@ -44,6 +47,7 @@
     <label class="item"><input type="checkbox" id="v4" class="daily-check"><span>Fancast チェックイン💙</span></label>
     <label class="item"><input type="checkbox" id="v5" class="daily-check"><span>Fancast 広告視聴💙</span></label>
   </div>
+
   <div class="footer-notes">
     <span class="note-title">💡 カムバックが確定するまで</span>
     <span class="note-text">IDOL CHAMPの💙は月末になったらチャートなどへ</span>
@@ -53,19 +57,21 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', () => {
-    const STORAGE_KEY = 'VOTE_LIST_STATE_V2';
-    const DATE_KEY = 'VOTE_LIST_DATE_V2';
+    // ローカルストレージ用のキー（以前のバージョンと混ざらないようV3に設定）
+    const STORAGE_KEY = 'VOTE_LIST_STATE_V3';
+    const DATE_KEY = 'VOTE_LIST_DATE_V3';
+    
     const checkboxes = document.querySelectorAll('.daily-check');
     const titleEl = document.getElementById('main-title');
     const dateDisplay = document.getElementById('today-date');
 
-    // 現在の日付を取得 (YYYY-MM-DD形式)
+    // 今日が何日か取得 (YYYY-MM-DD)
     const getTodayString = () => {
         const n = new Date();
         return `${n.getFullYear()}-${n.getMonth() + 1}-${n.getDate()}`;
     };
 
-    // UIの更新（チェック状態に合わせて表示を切り替え）
+    // UI更新処理
     const updateUI = (isUserAction = false) => {
         let checkedCount = 0;
         
@@ -74,26 +80,28 @@ document.addEventListener('DOMContentLoaded', () => {
             if (cb.checked) {
                 checkedCount++;
                 parent.classList.add('is-completed');
-                // アニメーション後に非表示にする
-                setTimeout(() => { if(cb.checked) parent.classList.add('hidden'); }, 400);
+                // アニメーションが終わる頃に物理的に消す
+                setTimeout(() => { 
+                    if(cb.checked) parent.classList.add('hidden'); 
+                }, 400);
             } else {
                 parent.classList.remove('is-completed', 'hidden');
             }
         });
 
-        // 全てチェックされた時の判定
+        // すべて完了したか判定
         if (checkedCount === checkboxes.length && checkboxes.length > 0) {
             titleEl.innerHTML = "全ミッション<br>完了！✨";
             titleEl.style.color = "#FFD700";
-            if(isUserAction) playSuccessCelebration();
+            if(isUserAction) playCelebration();
         } else {
             titleEl.innerHTML = "投票アイテムを<br>集めよう！";
             titleEl.style.color = "#FF3D00";
         }
     };
 
-    // 豪華なキラキラ演出
-    const playSuccessCelebration = () => {
+    // 豪華なキラキラ演出（連続して紙吹雪が舞う）
+    const playCelebration = () => {
         const duration = 3 * 1000;
         const end = Date.now() + duration;
 
@@ -112,14 +120,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 origin: { x: 1 },
                 colors: ['#FFD700', '#FFFFFF', '#FF8C00']
             });
-
             if (Date.now() < end) {
                 requestAnimationFrame(frame);
             }
         }());
     };
 
-    // データの保存
+    // データを保存する
     const saveData = () => {
         const state = {};
         checkboxes.forEach(cb => { state[cb.id] = cb.checked; });
@@ -127,19 +134,20 @@ document.addEventListener('DOMContentLoaded', () => {
         localStorage.setItem(DATE_KEY, getTodayString());
     };
 
-    // データの読み込みとリセット判定
-    const loadAndCheckReset = () => {
+    // 日付をチェックして、必要ならリセットする
+    const checkResetAndLoad = () => {
         const today = getTodayString();
         const savedDate = localStorage.getItem(DATE_KEY);
         
         dateDisplay.innerText = today.replace(/-/g, '/');
 
-        // 日付が変わっていたらリセット
         if (savedDate !== today) {
+            // 0時を過ぎているのでリセット
             localStorage.removeItem(STORAGE_KEY);
             checkboxes.forEach(cb => cb.checked = false);
-            saveData(); // 新しい日付を保存
+            saveData();
         } else {
+            // 保存された状態を復元
             const savedState = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
             checkboxes.forEach(cb => {
                 cb.checked = !!savedState[cb.id];
@@ -148,11 +156,11 @@ document.addEventListener('DOMContentLoaded', () => {
         updateUI(false);
     };
 
-    // イベントリスナー：チェックボックス
+    // チェックボックス変更時の動作
     checkboxes.forEach(cb => {
         cb.addEventListener('change', () => {
             if (cb.checked) {
-                // 1つチェックした時の軽い演出
+                // 1つチェックするごとに軽いキラキラ
                 confetti({ particleCount: 15, spread: 40, origin: { y: 0.7 }, colors: ['#FFD700'] });
             }
             saveData();
@@ -160,14 +168,14 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // 放置後の復帰対策（タブ切り替えやスマホのスリープ解除時）
+    // アプリ（ブラウザ）に戻った時に日付を再確認（長時間放置対策）
     document.addEventListener('visibilitychange', () => {
-        if (document.visibilityState === 'visible') loadAndCheckReset();
+        if (document.visibilityState === 'visible') checkResetAndLoad();
     });
-    window.addEventListener('focus', loadAndCheckReset);
+    window.addEventListener('focus', checkResetAndLoad);
 
-    // 初回実行
-    loadAndCheckReset();
+    // 起動時に実行
+    checkResetAndLoad();
 });
 </script>
 </body>
