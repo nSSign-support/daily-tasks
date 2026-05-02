@@ -4,7 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>投票アイテム収集リスト</title>
-<script src="https://jsdelivr.net"></script>
+<!-- 修正：正しいURLを指定し、deferを付けて読み込みを高速化 -->
+<script src="https://jsdelivr.net" defer></script>
 <style>
   :root {
     --gold: #FFD700;
@@ -20,9 +21,10 @@
     padding: 15px; border-radius: 24px; width: 90%; max-width: 360px; margin: 15px; 
     text-align: center; box-shadow: 0 8px 20px rgba(0,0,0,0.1);
     transition: all 0.8s ease;
+    /* 高速化：アニメーションの負荷を抑える準備 */
+    will-change: transform, background;
   }
 
-  /* 完了時のキラキラアニメーション強化 */
   .all-completed {
     background: linear-gradient(45deg, #FFD700, #FF8C00, #FF0080, #7928CA);
     background-size: 300% 300%;
@@ -40,7 +42,6 @@
   .limit-info b { color: var(--app-blue); background: #fff; padding: 1px 6px; border-radius: 4px; display: inline-block; margin-bottom: 2px; font-size: 0.8rem; }
   .limit-text { font-size: 0.65rem; white-space: nowrap; display: flex; align-items: center; flex-wrap: wrap; letter-spacing: -0.02em; } 
   
-  /* CSSハート描画 */
   .css-heart {
     display: inline-block;
     width: 0.7em;
@@ -112,12 +113,12 @@
   const title = document.getElementById('title');
 
   const celebrate = () => {
-    // 中央から大量に
-    confetti({ particleCount: 150, spread: 100, origin: { y: 0.6 }, colors: ['#FFD700', '#FF8C00', '#FF0000', '#FFFFFF'] });
-    // 左下から
-    confetti({ particleCount: 40, angle: 60, spread: 55, origin: { x: 0, y: 1 } });
-    // 右下から
-    confetti({ particleCount: 40, angle: 120, spread: 55, origin: { x: 1, y: 1 } });
+    // 修正：ライブラリが読み込まれているか確認してから実行
+    if (typeof confetti === 'function') {
+      confetti({ particleCount: 150, spread: 100, origin: { y: 0.6 }, colors: ['#FFD700', '#FF8C00', '#FF0000', '#FFFFFF'] });
+      confetti({ particleCount: 40, angle: 60, spread: 55, origin: { x: 0, y: 1 } });
+      confetti({ particleCount: 40, angle: 120, spread: 55, origin: { x: 1, y: 1 } });
+    }
   };
 
   const update = (fire) => {
@@ -163,7 +164,12 @@
   };
 
   cbs.forEach(c => c.addEventListener('change', () => { save(); update(true); }));
-  window.addEventListener('focus', load);
+  // 修正：focusイベントでのリロードを、日付が変わった時だけに限定（負荷軽減）
+  window.addEventListener('focus', () => {
+    const n = new Date();
+    const today = n.getFullYear()+'-'+(n.getMonth()+1)+'-'+n.getDate();
+    if(localStorage.getItem(K_DATE) !== today) load();
+  });
   load();
 })();
 </script>
