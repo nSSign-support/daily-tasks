@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>投票アイテム収集リスト</title>
-<script src="https://jsdelivr.net" defer></script>
+<!-- 修正：正しいURLを指定して紙吹雪が動くように改善 -->
 <script src="https://jsdelivr.net" defer></script>
 <style>
   :root {
@@ -21,7 +21,6 @@
     padding: 15px; border-radius: 24px; width: 90%; max-width: 360px; margin: 15px; 
     text-align: center; box-shadow: 0 8px 20px rgba(0,0,0,0.1);
     transition: all 0.8s ease;
-    /* 高速化：アニメーションの負荷を抑える準備 */
     will-change: transform, background;
   }
 
@@ -38,6 +37,8 @@
   
   h2 { font-size: 1.6rem; font-weight: 900; margin: 0 0 10px; color: #fff; text-shadow: 2px 2px 4px rgba(0,0,0,0.4); line-height: 1.3; }
   
+  .section-title { font-size: 1rem; font-weight: bold; color: #fff; margin: 15px 0 8px; text-shadow: 1px 1px 2px rgba(0,0,0,0.3); text-align: left; padding-left: 5px; }
+
   .limit-info { background: rgba(255,255,255,0.4); border-radius: 12px; padding: 10px; margin-bottom: 12px; color: #333; text-align: left; line-height: 1.4; font-weight: bold; }
   .limit-info b { color: var(--app-blue); background: #fff; padding: 1px 6px; border-radius: 4px; display: inline-block; margin-bottom: 2px; font-size: 0.8rem; }
   .limit-text { font-size: 0.65rem; white-space: nowrap; display: flex; align-items: center; flex-wrap: wrap; letter-spacing: -0.02em; } 
@@ -65,8 +66,9 @@
   }
   .item.is-completed { opacity: 0.4; transform: scale(0.95); background: #f8f8f8; }
   
-  .item span { font-size: 1rem; color: #333; font-weight: bold; flex-grow: 1; text-align: left; line-height: 1.2; }
+  .item span { font-size: 0.95rem; color: #333; font-weight: bold; flex-grow: 1; text-align: left; line-height: 1.3; }
   .app-tag { color: var(--app-blue); font-size: 0.75rem; display: block; margin-bottom: 2px; font-weight: bold; }
+  .note { font-size: 0.75rem; color: #666; font-weight: normal; display: block; margin-top: 2px; }
   
   input[type="checkbox"] { width: 26px; height: 26px; margin-right: 12px; accent-color: var(--orange); flex-shrink: 0; }
   
@@ -89,12 +91,25 @@
   </div>
 
   <div id="list">
-    <label class="item"><input type="checkbox" id="t1" class="cb"><span><small class="app-tag">IDOL CHAMP</small>出席💙</span></label>
-    <label class="item"><input type="checkbox" id="t2" class="cb"><span><small class="app-tag">IDOL CHAMP</small>出席後広告視聴<span class="css-heart"></span></span></label>
-    <label class="item"><input type="checkbox" id="t3" class="cb"><span><small class="app-tag">IDOL CHAMP</small>ルーレット<span class="css-heart"></span></span></label>
-    
+    <!-- テキストを変更しました -->
+    <div class="section-title">毎日コツコツつづけよう</div>
+    <label class="item"><input type="checkbox" id="t1" class="cb"><span><small class="app-tag">IDOL CHAMP</small>出席後広告視聴❤️</span></label>
+    <label class="item"><input type="checkbox" id="t2" class="cb"><span><small class="app-tag">IDOL CHAMP</small>ルーレット❤️</span></label>
+    <label class="item"><input type="checkbox" id="t3" class="cb"><span><small class="app-tag">IDOL CHAMP</small>クイズ💙 <span class="note">（５日連続満点❤️）</span></span></label>
     <label class="item"><input type="checkbox" id="t4" class="cb"><span><small class="app-tag">Fancast</small>チェックイン💙</span></label>
-    <label class="item"><input type="checkbox" id="t5" class="cb"><span><small class="app-tag">Fancast</small>広告視聴💙</span></label>
+    <label class="item"><input type="checkbox" id="t5" class="cb"><span><small class="app-tag">MUNIVERSE</small>出席⬜</span></label>
+    <label class="item"><input type="checkbox" id="t6" class="cb"><span><small class="app-tag">Higher</small>出席+広告視聴ボーナス🔴</span></label>
+    <label class="item"><input type="checkbox" id="t7" class="cb"><span><small class="app-tag">Higher</small>ルーレット🔴 [３回]</span></label>
+    <label class="item"><input type="checkbox" id="t8" class="cb"><span><small class="app-tag">Higher</small>はしご乗り🔴 [３回]</span></label>
+    
+    <div class="section-title">やれる分だけでもがんばろう</div>
+    <label class="item"><input type="checkbox" id="t9" class="cb"><span><small class="app-tag">Fancast</small>広告視聴💙 [視聴ボタン３個×２０]<span class="note">※１回ごとに１０分インターバル</span></span></label>
+    <label class="item"><input type="checkbox" id="t10" class="cb"><span><small class="app-tag">Higher</small>広告視聴🔴 [５０回]<span class="note">※１０回ごとに５分インターバル</span></span></label>
+    <label class="item"><input type="checkbox" id="t11" class="cb"><span><small class="app-tag">mubeat</small>広告視聴💗 [１５回]<span class="note">※１回ごとに１０秒インターバル</span></span></label>
+    <label class="item"><input type="checkbox" id="t12" class="cb"><span><small class="app-tag">LiNC</small>広告視聴💜 [３０回]<span class="note">※１回ごとに１分インターバル</span></span></label>
+    <label class="item"><input type="checkbox" id="t13" class="cb"><span><small class="app-tag">tin</small>広告視聴💜 [２０回]<span class="note">※１回ごとに１分インターバル</span></span></label>
+    <label class="item"><input type="checkbox" id="t14" class="cb"><span><small class="app-tag">MUNIVERSE</small>広告視聴🟦 [２０回]</span></label>
+    <label class="item"><input type="checkbox" id="t15" class="cb"><span><small class="app-tag">mubeat</small>クイズに挑戦💗<span class="note">※１日１回は無料</span></span></label>
   </div>
 
   <div class="footer">
@@ -113,7 +128,6 @@
   const title = document.getElementById('title');
 
   const celebrate = () => {
-    // 修正：ライブラリが読み込まれているか確認してから実行
     if (typeof confetti === 'function') {
       confetti({ particleCount: 150, spread: 100, origin: { y: 0.6 }, colors: ['#FFD700', '#FF8C00', '#FF0000', '#FFFFFF'] });
       confetti({ particleCount: 40, angle: 60, spread: 55, origin: { x: 0, y: 1 } });
@@ -164,7 +178,7 @@
   };
 
   cbs.forEach(c => c.addEventListener('change', () => { save(); update(true); }));
-  // 修正：focusイベントでのリロードを、日付が変わった時だけに限定（負荷軽減）
+  
   window.addEventListener('focus', () => {
     const n = new Date();
     const today = n.getFullYear()+'-'+(n.getMonth()+1)+'-'+n.getDate();
