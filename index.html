@@ -4,7 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>投票アイテム収集リスト</title>
-<script src="https://jsdelivr.net" defer></script>
 <style>
   :root {
     --gold: #FFD700;
@@ -21,6 +20,8 @@
     text-align: center; box-shadow: 0 8px 20px rgba(0,0,0,0.1);
     transition: all 0.8s ease;
     will-change: transform, background;
+    position: relative;
+    overflow: hidden;
   }
 
   .all-completed {
@@ -64,9 +65,28 @@
   .footer { margin-top: 10px; padding: 12px; background: rgba(0,0,0,0.15); border-radius: 12px; color: #fff; text-align: left; font-size: 0.8rem; line-height: 1.6; font-weight: bold; text-shadow: 1px 1px 2px rgba(0,0,0,0.3); }
   .footer b { font-size: 0.8rem; display: block; margin-bottom: 4px; }
   .indent { font-size: 0.62rem; padding-left: 1.2em; text-indent: -1.2em; display: block; letter-spacing: -0.01em; opacity: 0.95; }
+
+  /* 新機能：100%確実に動く絵文字ご褒美アニメーション */
+  .popup-reward {
+    position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0);
+    font-size: 2.2rem; background: rgba(255, 255, 255, 0.95); padding: 15px 25px;
+    border-radius: 50px; box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    z-index: 9999; pointer-events: none; opacity: 0; white-space: nowrap;
+  }
+  .popup-reward.show { animation: pop-up 1.8s ease-out forwards; }
+  @keyframes pop-up {
+    0% { transform: translate(-50%, -50%) scale(0.3); opacity: 0; }
+    15% { transform: translate(-50%, -50%) scale(1.1); opacity: 1; }
+    25% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+    80% { transform: translate(-50%, -70%) scale(1); opacity: 1; }
+    100% { transform: translate(-50%, -90%) scale(0.8); opacity: 0; }
+  }
 </style>
 </head>
 <body>
+
+<!-- ご褒美用の絵文字を表示する隠し箱 -->
+<div id="rewardBox" class="popup-reward">🎉 👏 ✨</div>
 
 <div class="container" id="box">
   <span id="date"></span>
@@ -77,7 +97,6 @@
     <div class="limit-row"><b>Fancast</b><span class="limit-text">💙30日（チェックイン・広告）</span></div>
     <div class="limit-row"><b>mubeat</b><span class="limit-text">💗90日（延長クーポンあり）</span></div>
     
-    <!-- 修正：(シルバー)(ブルー) の説明テキストをしっかりと復活させました -->
     <div class="limit-row">
       <b>MUNIVERSE</b><div class="mu-block"><span class="limit-text">⬜(シルバー)30日</span><br><span class="limit-text">🟦(ブルー)60日</span></div>
     </div>
@@ -107,10 +126,11 @@
     <label class="item"><input type="checkbox" id="t15" class="cb"><span><small class="app-tag">mubeat</small>クイズに挑戦💗<span class="note">※１日１回は無料</span></span></label>
   </div>
 
+  <!-- 修正：ご希望通りの一文に書き換えました -->
   <div class="footer">
     <b>💡 カムバックが確定するまで</b>
     <span class="indent">▶ 期限が短いアイテムは自分の生活リズムに合わせて集めるのがコツ◎</span>
-    <span class="indent">▶ 期限が迫ってきたら消えちゃう前に各種チャートへ活用がベスト！</span>
+    <span class="indent">▶ 期限が迫ってきたら消えちゃう前に各種チャートなどに活用を…</span>
   </div>
 </div>
 
@@ -122,19 +142,13 @@
   const cbs = document.querySelectorAll('.cb');
   const box = document.getElementById('box');
   const title = document.getElementById('title');
+  const rewardBox = document.getElementById('rewardBox');
 
-  const celebrateAll = () => {
-    if (typeof confetti === 'function') {
-      confetti({ particleCount: 150, spread: 100, origin: { y: 0.6 }, colors: ['#FFD700', '#FF8C00', '#FF0000', '#FFFFFF'] });
-      confetti({ particleCount: 40, angle: 60, spread: 55, origin: { x: 0, y: 1 } });
-      confetti({ particleCount: 40, angle: 120, spread: 55, origin: { x: 1, y: 1 } });
-    }
-  };
-
-  const celebrateHalf = () => {
-    if (typeof confetti === 'function') {
-      confetti({ particleCount: 50, spread: 60, origin: { y: 0.6 }, colors: ['#FFD700', '#FF8C00', '#FFFFFF'] });
-    }
+  // 100%確実に動く絵文字ポップアップ
+  const showEmojiReward = () => {
+    rewardBox.classList.remove('show');
+    void rewardBox.offsetWidth; // アニメーションをリセットするおまじない
+    rewardBox.classList.add('show');
   };
 
   const update = (fire) => {
@@ -153,14 +167,13 @@
       }
     });
 
-    // 修正：前回のデータを正しく参照し、8個目が埋まった瞬間だけ飛ぶように調整
+    // 「きょうの推しごと」がちょうど全部埋まった瞬間だけご褒美
     if (fire && topOk === topCbs.length && ok !== cbs.length) {
       if (localStorage.getItem(K_HALF) !== '1') {
         localStorage.setItem(K_HALF, '1');
-        celebrateHalf();
+        showEmojiReward();
       }
     }
-    // 8個未満に減ったらフラグを消して、再度埋まった時に飛ぶようにリセット
     if (topOk < topCbs.length) {
       localStorage.removeItem(K_HALF);
     }
@@ -168,7 +181,6 @@
     if(ok === cbs.length) {
       box.classList.add('all-completed');
       title.innerHTML = "✨ COMPLETE ✨<br>おつかれさまでした！";
-      if(fire) celebrateAll();
     } else {
       box.classList.remove('all-completed');
       title.innerHTML = "投票アイテムを<br>集めよう！";
