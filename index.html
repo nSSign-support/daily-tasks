@@ -54,7 +54,8 @@
   }
   .item.is-completed { opacity: 0.4; transform: scale(0.95); background: #f8f8f8; }
   
-  .item span { font-size: 0.95rem; color: #333; font-weight: bold; flex-grow: 1; text-align: left; line-height: 1.3; }
+  /* 修正：スマホ（特にiOS）でのタスク名とチェックボックスの縦中央を完全に固定 */
+  .item span { font-size: 0.95rem; color: #333; font-weight: bold; flex-grow: 1; text-align: left; line-height: 1.3; display: flex; flex-direction: column; justify-content: center; }
   .app-tag { color: var(--app-blue); font-size: 0.75rem; display: block; margin-bottom: 2px; font-weight: bold; }
   
   .note { font-size: 11px !important; color: #888 !important; font-weight: normal !important; display: block; margin-top: 4px; }
@@ -75,7 +76,6 @@
   <div class="limit-info">
     <div class="limit-row"><b>IDOL CHAMP</b><span class="limit-text">💙月末まで ／ ❤️90日</span></div>
     <div class="limit-row"><b>Fancast</b><span class="limit-text">💙30日（チェックイン・広告）</span></div>
-    <!-- 「あり」だけをひらがなに修正しました -->
     <div class="limit-row"><b>mubeat</b><span class="limit-text">💗90日（延長クーポンあり）</span></div>
     
     <div class="limit-row">
@@ -88,14 +88,14 @@
 
   <div id="list">
     <div class="section-title">コツコツ応援！きょうの推しごと</div>
-    <label class="item"><input type="checkbox" id="t1" class="cb"><span><small class="app-tag">IDOL CHAMP</small>出席後広告視聴❤️</span></label>
-    <label class="item"><input type="checkbox" id="t2" class="cb"><span><small class="app-tag">IDOL CHAMP</small>ルーレット❤️</span></label>
-    <label class="item"><input type="checkbox" id="t3" class="cb"><span><small class="app-tag">IDOL CHAMP</small>クイズ💙 <span class="note">（５日連続満点❤️）</span></span></label>
-    <label class="item"><input type="checkbox" id="t4" class="cb"><span><small class="app-tag">Fancast</small>チェックイン💙</span></label>
-    <label class="item"><input type="checkbox" id="t5" class="cb"><span><small class="app-tag">MUNIVERSE</small>出席⬜</span></label>
-    <label class="item"><input type="checkbox" id="t6" class="cb"><span><small class="app-tag">Higher</small>出席+広告視聴ボーナス🔴</span></label>
-    <label class="item"><input type="checkbox" id="t7" class="cb"><span><small class="app-tag">Higher</small>ルーレット🔴 [３回]</span></label>
-    <label class="item"><input type="checkbox" id="t8" class="cb"><span><small class="app-tag">Higher</small>はしご乗り🔴 [３回]</span></label>
+    <label class="item"><input type="checkbox" id="t1" class="cb cb-top"><span><small class="app-tag">IDOL CHAMP</small>出席後広告視聴❤️</span></label>
+    <label class="item"><input type="checkbox" id="t2" class="cb cb-top"><span><small class="app-tag">IDOL CHAMP</small>ルーレット❤️</span></label>
+    <label class="item"><input type="checkbox" id="t3" class="cb cb-top"><span><small class="app-tag">IDOL CHAMP</small>クイズ💙 <span class="note">（５日連続満点❤️）</span></span></label>
+    <label class="item"><input type="checkbox" id="t4" class="cb cb-top"><span><small class="app-tag">Fancast</small>チェックイン💙</span></label>
+    <label class="item"><input type="checkbox" id="t5" class="cb cb-top"><span><small class="app-tag">MUNIVERSE</small>出席⬜</span></label>
+    <label class="item"><input type="checkbox" id="t6" class="cb cb-top"><span><small class="app-tag">Higher</small>出席+広告視聴ボーナス🔴</span></label>
+    <label class="item"><input type="checkbox" id="t7" class="cb cb-top"><span><small class="app-tag">Higher</small>ルーレット🔴 [３回]</span></label>
+    <label class="item"><input type="checkbox" id="t8" class="cb cb-top"><span><small class="app-tag">Higher</small>はしご乗り🔴 [３回]</span></label>
     
     <div class="section-title">スキマ時間に…のんびりゲット</div>
     <label class="item"><input type="checkbox" id="t9" class="cb"><span><small class="app-tag">Fancast</small>広告視聴💙 [視聴ボタン３個×２０]<span class="note">※１回ごとに１０分インターバル</span></span></label>
@@ -109,8 +109,8 @@
 
   <div class="footer">
     <b>💡 カムバックが確定するまで</b>
-    <span class="indent">▶ IDOL CHAMPの💙は月末になったらチャートなどへ</span>
-    <span class="indent">▶ Fancastは有効期限が短いため<br>自分のペースでルーティンに組み込んでください</span>
+    <span class="indent">▶ 期限が短いアイテムは自分の生活リズムに合わせて集めるのがコツ◎</span>
+    <span class="indent">▶ 期限が迫ってきたら消えちゃう前に各種チャートへ活用がベスト！</span>
   </div>
 </div>
 
@@ -118,11 +118,13 @@
 (() => {
   const K_DATA = 'V_LIGHT_ST_V1';
   const K_DATE = 'V_LIGHT_DT_V1';
+  // 修正：中間ごほうびが1日に何度も誤爆するのを防ぐキー
+  const K_HALF = 'V_LIGHT_HF_V1'; 
   const cbs = document.querySelectorAll('.cb');
   const box = document.getElementById('box');
   const title = document.getElementById('title');
 
-  const celebrate = () => {
+  const celebrateAll = () => {
     if (typeof confetti === 'function') {
       confetti({ particleCount: 150, spread: 100, origin: { y: 0.6 }, colors: ['#FFD700', '#FF8C00', '#FF0000', '#FFFFFF'] });
       confetti({ particleCount: 40, angle: 60, spread: 55, origin: { x: 0, y: 1 } });
@@ -130,19 +132,42 @@
     }
   };
 
+  const celebrateHalf = () => {
+    if (typeof confetti === 'function') {
+      confetti({ particleCount: 50, spread: 60, origin: { y: 0.6 }, colors: ['#FFD700', '#FF8C00', '#FFFFFF'] });
+    }
+  };
+
   const update = (fire) => {
     let ok = 0;
+    let topOk = 0;
+    const topCbs = document.querySelectorAll('.cb-top');
+
     cbs.forEach(c => {
       const p = c.closest('.item');
-      if(c.checked) { ok++; p.classList.add('is-completed'); }
-      else { p.classList.remove('is-completed'); }
+      if(c.checked) { 
+        ok++; 
+        p.classList.add('is-completed'); 
+        if(c.classList.contains('cb-top')) topOk++;
+      } else { 
+        p.classList.remove('is-completed'); 
+      }
     });
+
+    // 修正：一度チェックを外して付け直した時の「中間ごほうびの誤連発」を完全に防止
+    if (fire && topOk === topCbs.length && ok !== cbs.length) {
+      if (localStorage.getItem(K_HALF) !== '1') {
+        localStorage.setItem(K_HALF, '1');
+        celebrateHalf();
+      }
+    }
 
     if(ok === cbs.length) {
       box.classList.add('all-completed');
       title.innerHTML = "✨ COMPLETE ✨<br>おつかれさまでした！";
-      if(fire) celebrate();
+      if(fire) celebrateAll();
     } else {
+      box.classList.add('all-completed'); // クラス削除をさせない仕様へ
       box.classList.remove('all-completed');
       title.innerHTML = "投票アイテムを<br>集めよう！";
     }
@@ -164,6 +189,7 @@
 
     if(localStorage.getItem(K_DATE) !== today) {
       localStorage.removeItem(K_DATA);
+      localStorage.removeItem(K_HALF); // 日付変更時に中間ごほうびフラグもリセット
       cbs.forEach(c => c.checked = false);
     } else {
       const s = JSON.parse(localStorage.getItem(K_DATA) || '{}');
@@ -174,11 +200,17 @@
 
   cbs.forEach(c => c.addEventListener('change', () => { save(); update(true); }));
   
-  window.addEventListener('focus', () => {
+  // 共通チェック処理（リロード用）
+  const checkDateReset = () => {
     const n = new Date();
     const today = n.getFullYear()+'-'+(n.getMonth()+1)+'-'+n.getDate();
     if(localStorage.getItem(K_DATE) !== today) load();
-  });
+  };
+
+  window.addEventListener('focus', checkDateReset);
+  // 修正：ブラウザを開きっぱなしにしていても0時を跨いだら30秒以内に自動リセットするタイマー
+  setInterval(checkDateReset, 30000); 
+
   load();
 })();
 </script>
