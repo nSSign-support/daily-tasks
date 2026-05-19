@@ -54,7 +54,6 @@
   }
   .item.is-completed { opacity: 0.4; transform: scale(0.95); background: #f8f8f8; }
   
-  /* 修正：スマホ（特にiOS）でのタスク名とチェックボックスの縦中央を完全に固定 */
   .item span { font-size: 0.95rem; color: #333; font-weight: bold; flex-grow: 1; text-align: left; line-height: 1.3; display: flex; flex-direction: column; justify-content: center; }
   .app-tag { color: var(--app-blue); font-size: 0.75rem; display: block; margin-bottom: 2px; font-weight: bold; }
   
@@ -78,8 +77,9 @@
     <div class="limit-row"><b>Fancast</b><span class="limit-text">💙30日（チェックイン・広告）</span></div>
     <div class="limit-row"><b>mubeat</b><span class="limit-text">💗90日（延長クーポンあり）</span></div>
     
+    <!-- 修正：(シルバー)(ブルー) の説明テキストをしっかりと復活させました -->
     <div class="limit-row">
-      <b>MUNIVERSE</b><div class="mu-block"><span class="limit-text">⬜30日</span><br><span class="limit-text">🟦60日</span></div>
+      <b>MUNIVERSE</b><div class="mu-block"><span class="limit-text">⬜(シルバー)30日</span><br><span class="limit-text">🟦(ブルー)60日</span></div>
     </div>
     
     <div class="limit-row"><b>LiNC・tin</b><span class="limit-text">💜180日</span></div>
@@ -118,7 +118,6 @@
 (() => {
   const K_DATA = 'V_LIGHT_ST_V1';
   const K_DATE = 'V_LIGHT_DT_V1';
-  // 修正：中間ごほうびが1日に何度も誤爆するのを防ぐキー
   const K_HALF = 'V_LIGHT_HF_V1'; 
   const cbs = document.querySelectorAll('.cb');
   const box = document.getElementById('box');
@@ -154,12 +153,16 @@
       }
     });
 
-    // 修正：一度チェックを外して付け直した時の「中間ごほうびの誤連発」を完全に防止
+    // 修正：前回のデータを正しく参照し、8個目が埋まった瞬間だけ飛ぶように調整
     if (fire && topOk === topCbs.length && ok !== cbs.length) {
       if (localStorage.getItem(K_HALF) !== '1') {
         localStorage.setItem(K_HALF, '1');
         celebrateHalf();
       }
+    }
+    // 8個未満に減ったらフラグを消して、再度埋まった時に飛ぶようにリセット
+    if (topOk < topCbs.length) {
+      localStorage.removeItem(K_HALF);
     }
 
     if(ok === cbs.length) {
@@ -167,7 +170,6 @@
       title.innerHTML = "✨ COMPLETE ✨<br>おつかれさまでした！";
       if(fire) celebrateAll();
     } else {
-      box.classList.add('all-completed'); // クラス削除をさせない仕様へ
       box.classList.remove('all-completed');
       title.innerHTML = "投票アイテムを<br>集めよう！";
     }
@@ -189,7 +191,7 @@
 
     if(localStorage.getItem(K_DATE) !== today) {
       localStorage.removeItem(K_DATA);
-      localStorage.removeItem(K_HALF); // 日付変更時に中間ごほうびフラグもリセット
+      localStorage.removeItem(K_HALF);
       cbs.forEach(c => c.checked = false);
     } else {
       const s = JSON.parse(localStorage.getItem(K_DATA) || '{}');
@@ -200,7 +202,6 @@
 
   cbs.forEach(c => c.addEventListener('change', () => { save(); update(true); }));
   
-  // 共通チェック処理（リロード用）
   const checkDateReset = () => {
     const n = new Date();
     const today = n.getFullYear()+'-'+(n.getMonth()+1)+'-'+n.getDate();
@@ -208,7 +209,6 @@
   };
 
   window.addEventListener('focus', checkDateReset);
-  // 修正：ブラウザを開きっぱなしにしていても0時を跨いだら30秒以内に自動リセットするタイマー
   setInterval(checkDateReset, 30000); 
 
   load();
