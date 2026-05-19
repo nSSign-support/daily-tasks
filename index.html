@@ -4,7 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>投票アイテム収集リスト</title>
-<!-- 修正：正しいURLを指定して紙吹雪が動くように改善 -->
 <script src="https://jsdelivr.net" defer></script>
 <style>
   :root {
@@ -39,9 +38,10 @@
   
   .section-title { font-size: 1rem; font-weight: bold; color: #fff; margin: 15px 0 8px; text-shadow: 1px 1px 2px rgba(0,0,0,0.3); text-align: left; padding-left: 5px; }
 
-  .limit-info { background: rgba(255,255,255,0.4); border-radius: 12px; padding: 10px; margin-bottom: 12px; color: #333; text-align: left; line-height: 1.4; font-weight: bold; }
-  .limit-info b { color: var(--app-blue); background: #fff; padding: 1px 6px; border-radius: 4px; display: inline-block; margin-bottom: 2px; font-size: 0.8rem; }
-  .limit-text { font-size: 0.65rem; white-space: nowrap; display: flex; align-items: center; flex-wrap: wrap; letter-spacing: -0.02em; } 
+  .limit-info { background: rgba(255,255,255,0.45); border-radius: 12px; padding: 10px; margin-bottom: 12px; color: #333; text-align: left; line-height: 1.4; font-weight: bold; }
+  .limit-info b { color: var(--app-blue); background: #fff; padding: 1px 6px; border-radius: 4px; display: inline-block; margin-top: 5px; margin-bottom: 2px; font-size: 0.8rem; }
+  .limit-info b:first-child { margin-top: 0; }
+  .limit-text { font-size: 0.65rem; display: block; letter-spacing: -0.01em; } 
   
   .css-heart {
     display: inline-block;
@@ -69,7 +69,6 @@
   .item span { font-size: 0.95rem; color: #333; font-weight: bold; flex-grow: 1; text-align: left; line-height: 1.3; }
   .app-tag { color: var(--app-blue); font-size: 0.75rem; display: block; margin-bottom: 2px; font-weight: bold; }
   
-  /* 修正：全角文字でも小さく見えるよう、サイズを11pxに固定し、色をさらに薄くしました */
   .note { font-size: 11px !important; color: #888 !important; font-weight: normal !important; display: block; margin-top: 4px; }
   
   input[type="checkbox"] { width: 26px; height: 26px; margin-right: 12px; accent-color: var(--orange); flex-shrink: 0; }
@@ -85,15 +84,23 @@
   <span id="date"></span>
   <h2 id="title">投票アイテムを<br>集めよう！</h2>
   
+  <!-- 修正：有効期限の絵文字をすべてリスト内のマークと完全に一致させました -->
   <div class="limit-info">
     <b>IDOL CHAMP</b>
-    <span class="limit-text">💙：毎月月末まで　<span class="css-heart"></span>：獲得から90日</span>
+    <span class="limit-text">💙：毎月月末まで ／ ❤️：獲得から90日</span>
     <b>Fancast</b>
     <span class="limit-text">💙：獲得から30日（チェックイン・広告視聴分）</span>
+    <b>mubeat</b>
+    <span class="limit-text">💗：獲得から90日（延長クーポンあり）</span>
+    <b>MUNIVERSE</b>
+    <span class="limit-text">⬜(シルバー)：獲得から30日 ／ 🟦(ブルー)：獲得から60日</span>
+    <b>LiNC ・ tin</b>
+    <span class="limit-text">💜：獲得から180日</span>
+    <b>Higher</b>
+    <span class="limit-text">🔴(ルビー)：獲得から90日</span>
   </div>
 
   <div id="list">
-    <!-- キャッチコピー風に変更しました -->
     <div class="section-title">コツコツ応援！きょうの推しごと</div>
     <label class="item"><input type="checkbox" id="t1" class="cb"><span><small class="app-tag">IDOL CHAMP</small>出席後広告視聴❤️</span></label>
     <label class="item"><input type="checkbox" id="t2" class="cb"><span><small class="app-tag">IDOL CHAMP</small>ルーレット❤️</span></label>
@@ -101,10 +108,9 @@
     <label class="item"><input type="checkbox" id="t4" class="cb"><span><small class="app-tag">Fancast</small>チェックイン💙</span></label>
     <label class="item"><input type="checkbox" id="t5" class="cb"><span><small class="app-tag">MUNIVERSE</small>出席⬜</span></label>
     <label class="item"><input type="checkbox" id="t6" class="cb"><span><small class="app-tag">Higher</small>出席+広告視聴ボーナス🔴</span></label>
-    <label class="item"><input type="checkbox" id="t7" class="cb"><span><small class="app-tag">Higher</small>ルーレット🔴 [３回]</span></label>
+    --   <label class="item"><input type="checkbox" id="t7" class="cb"><span><small class="app-tag">Higher</small>ルーレット🔴 [３回]</span></label>
     <label class="item"><input type="checkbox" id="t8" class="cb"><span><small class="app-tag">Higher</small>はしご乗り🔴 [３回]</span></label>
     
-    <!-- キャッチコピー風に変更しました -->
     <div class="section-title">スキマ時間に…のんびりゲット</div>
     <label class="item"><input type="checkbox" id="t9" class="cb"><span><small class="app-tag">Fancast</small>広告視聴💙 [視聴ボタン３個×２０]<span class="note">※１回ごとに１０分インターバル</span></span></label>
     <label class="item"><input type="checkbox" id="t10" class="cb"><span><small class="app-tag">Higher</small>広告視聴🔴 [５０回]<span class="note">※１０回ごとに５分インターバル</span></span></label>
