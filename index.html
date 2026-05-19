@@ -38,16 +38,13 @@
   
   .section-title { font-size: 1rem; font-weight: bold; color: #fff; margin: 15px 0 8px; text-shadow: 1px 1px 2px rgba(0,0,0,0.3); text-align: left; padding-left: 5px; }
 
-  /* 修正：白い箱（bタグ）を復活させつつ、コンパクトに配置 */
   .limit-info { background: rgba(255,255,255,0.4); border-radius: 12px; padding: 10px; margin-bottom: 12px; color: #333; text-align: left; font-size: 0.7rem; line-height: 1.7; font-weight: bold; }
   .limit-row { display: flex; align-items: flex-start; margin-bottom: 4px; }
   .limit-row:last-child { margin-bottom: 0; }
   
-  /* 白い箱のスタイル */
   .limit-info b { color: var(--app-blue); background: #fff; padding: 1px 6px; border-radius: 4px; display: inline-block; font-size: 0.75rem; font-weight: bold; width: 85px; text-align: center; margin-right: 8px; flex-shrink: 0; }
   .limit-text { font-weight: bold; padding-top: 1px; }
   
-  /* ミュニバースの2行の頭を揃える配置 */
   .mu-block { display: inline-block; vertical-align: top; padding-top: 1px; }
 
   .item { 
@@ -78,9 +75,9 @@
   <div class="limit-info">
     <div class="limit-row"><b>IDOL CHAMP</b><span class="limit-text">💙月末まで ／ ❤️90日</span></div>
     <div class="limit-row"><b>Fancast</b><span class="limit-text">💙30日（チェックイン・広告）</span></div>
-    <div class="limit-row"><b>mubeat</b><span class="limit-text">💗90日（延長クーポン有）</span></div>
+    <!-- 「あり」だけをひらがなに修正しました -->
+    <div class="limit-row"><b>mubeat</b><span class="limit-text">💗90日（延長クーポンあり）</span></div>
     
-    <!-- ミュニバースの白い箱の右側で、絵文字が綺麗に2行に揃います -->
     <div class="limit-row">
       <b>MUNIVERSE</b><div class="mu-block"><span class="limit-text">⬜30日</span><br><span class="limit-text">🟦60日</span></div>
     </div>
