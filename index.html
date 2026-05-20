@@ -35,15 +35,34 @@
 
   #date { font-size: 0.9rem; font-weight: bold; color: #fff; margin-bottom: 5px; display: block; text-shadow: 1px 1px 2px rgba(0,0,0,0.3); }
   
-  h2 { font-size: 1.6rem; font-weight: 900; margin: 0 0 10px; color: #fff; text-shadow: 2px 2px 4px rgba(0,0,0,0.4); line-height: 1.3; }
+  /* 決定点：ダークグレーの文字色でメリハリをつけた視認性抜群のタイトル */
+  h2 { 
+    font-size: 1.6rem; 
+    font-weight: 900; 
+    margin: 5px 0 15px; 
+    color: #22252a; 
+    text-shadow: 1px 1px 0px #fff, 0 0 8px rgba(255,255,255,0.6); 
+    line-height: 1.3; 
+    letter-spacing: 0.03em;
+  }
   
-  .section-title { font-size: 1rem; font-weight: bold; color: #fff; margin: 15px 0 8px; text-shadow: 1px 1px 2px rgba(0,0,0,0.3); text-align: left; padding-left: 5px; }
+  .section-title { 
+    font-size: 1rem; 
+    font-weight: bold; 
+    color: #fff; 
+    margin: 18px 0 10px; 
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.3); 
+    text-align: left; 
+    padding: 4px 12px; 
+    background: linear-gradient(90deg, rgba(211, 47, 47, 0.35) 0%, rgba(211, 47, 47, 0) 90%);
+    border-radius: 6px 0 0 6px;
+    margin-right: -15px;
+  }
 
   .limit-info { background: rgba(255,255,255,0.4); border-radius: 12px; padding: 10px; margin-bottom: 12px; color: #333; text-align: left; font-size: 0.7rem; line-height: 1.7; font-weight: bold; }
   .limit-row { display: flex; align-items: flex-start; margin-bottom: 4px; }
   .limit-row:last-child { margin-bottom: 0; }
   
-  /* 白い箱の横幅を 95px に広げ、IDOL CHAMP が折れないようにしました */
   .limit-info b { color: var(--app-blue); background: #fff; padding: 1px 4px; border-radius: 4px; display: inline-block; font-size: 0.72rem; font-weight: bold; width: 95px; text-align: center; margin-right: 8px; flex-shrink: 0; letter-spacing: -0.02em; }
   .limit-text { font-weight: bold; padding-top: 1px; }
   
@@ -89,7 +108,7 @@
 
 <div class="container" id="box">
   <span id="date"></span>
-  <h2 id="title">投票アイテムを<br>集めよう！</h2>
+  <h2 id="title">投票アイテムを<br>あつめよう！</h2>
   
   <div class="limit-info">
     <div class="limit-row"><b>IDOL CHAMP</b><span class="limit-text">💙月末まで ／ ❤️90日</span></div>
@@ -127,7 +146,7 @@
 
   <div class="footer">
     <b>💡 カムバックが確定するまで</b>
-    <span class="indent">▶ 暮らしのなかに組み込んで日々のルーティーンに◎</span>
+    <span class="indent">▶ 暮らしのなかにアイテム集めを組み込んで日々のルーティーンに</span>
     <span class="indent">▶ 消えちゃうアイテムはチャートや企画に活用を…</span>
   </div>
 </div>
@@ -164,13 +183,13 @@
       }
     });
 
-    // 1. 【最優先】全体コンプリート判定（どの順番でも発火可能に）
+    // 1. 【最優先】全体コンプリート判定
     if(ok === cbs.length) {
       box.classList.add('all-completed');
       title.innerHTML = "✨ COMPLETE ✨<br>おつかれさまでした！";
     } else {
       box.classList.remove('all-completed');
-      title.innerHTML = "投票アイテムを<br>集めよう！";
+      title.innerHTML = "投票アイテムを<br>あつめよう！";
     }
 
     // 2. 前半（きょうの推しごと）コンプリート判定
