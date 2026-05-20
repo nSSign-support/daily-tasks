@@ -35,19 +35,17 @@
 
   #date { font-size: 0.9rem; font-weight: bold; color: #fff; margin-bottom: 8px; display: block; text-shadow: 1px 1px 2px rgba(0,0,0,0.3); }
   
-  /* 変更点：1行化、文字詰め、おしゃれな白リボン背景、3D立体シャドウの融合 */
+  /* 変更点：文字を赤に、3Dシャドウを白に逆転！ポップで強力な視認性 */
   h2 { 
     font-size: 1.45rem; 
     font-weight: 950; 
-    margin: 5px -15px 18px; /* 左右のマージンをマイナスにしてリボンをコンテナ幅いっぱいに広げる */
-    color: #fff; 
-    /* 白文字をクッキリ浮き上がらせる3Dレッドシャドウ＋うっすら黒い影 */
-    text-shadow: 2px 2px 0px var(--red), 3px 3px 6px rgba(0,0,0,0.4); 
+    margin: 5px -15px 18px; 
+    color: var(--red); 
+    text-shadow: 2px 2px 0px #fff, 3px 3px 6px rgba(0,0,0,0.3); 
     line-height: 1.2; 
-    letter-spacing: -0.02em; /* 1行に収めるために文字間をわずかに引き締め */
-    white-space: nowrap; /* 絶対に改行させない */
+    letter-spacing: -0.02em; 
+    white-space: nowrap; 
     
-    /* おしゃれな背景リボン（半透明の白マット） */
     background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.22) 15%, rgba(255,255,255,0.22) 85%, rgba(255,255,255,0) 100%);
     padding: 10px 0;
     box-shadow: 0 2px 5px rgba(0,0,0,0.05);
@@ -115,7 +113,6 @@
 
 <div class="container" id="box">
   <span id="date"></span>
-  <!-- 変更点：改行（<br>）を無くして1行に変更 -->
   <h2 id="title">投票アイテムをあつめよう！</h2>
   
   <div class="limit-info">
@@ -144,7 +141,7 @@
     
     <div class="section-title">スキマ時間に…のんびりゲット</div>
     <label class="item"><input type="checkbox" id="t9" class="cb"><span><small class="app-tag">Fancast</small>広告視聴💙 [視聴ボタン３個×２０]<span class="note">※１回ごとに１０分インターバル</span></span></label>
-    <label class="item"><input type="checkbox" id="t10" class="cb"><span><small class="app-tag">Higher</small>広告視聴🔴 [５０回]<span class="note">※１０回ごとに５分インターバル</span></span></label>
+    <label class="item"><input type="checkbox" id="t10" class="cb"><span><small class="app-tag">Higher</small>広告視聴🔴 [５０回]<span class="note">※１0回ごとに５分インターバル</span></span></label>
     <label class="item"><input type="checkbox" id="t11" class="cb"><span><small class="app-tag">mubeat</small>広告視聴💗 [１５回]<span class="note">※１回ごとに１０秒インターバル</span></span></label>
     <label class="item"><input type="checkbox" id="t12" class="cb"><span><small class="app-tag">LiNC</small>広告視聴💜 [３０回]<span class="note">※１回ごとに１分インターバル</span></span></label>
     <label class="item"><input type="checkbox" id="t13" class="cb"><span><small class="app-tag">tin</small>広告視聴💜 [２０回]<span class="note">※１回ごとに１分インターバル</span></span></label>
@@ -191,12 +188,16 @@
       }
     });
 
-    // 1. 【最優先】全体コンプリート判定（1行用に書き換え）
+    // 1. 【最優先】全体コンプリート判定（コンプリート時は文字を赤ではなくゴールドに戻すとお祝い感が出ます）
     if(ok === cbs.length) {
       box.classList.add('all-completed');
+      title.style.color = '#fff';
+      title.style.textShadow = '2px 2px 0px var(--red), 3px 3px 6px rgba(0,0,0,0.4)';
       title.innerHTML = "✨ COMPLETE ✨ おつかれさま！";
     } else {
       box.classList.remove('all-completed');
+      title.style.color = 'var(--red)';
+      title.style.textShadow = '2px 2px 0px #fff, 3px 3px 6px rgba(0,0,0,0.3)';
       title.innerHTML = "投票アイテムをあつめよう！";
     }
 
