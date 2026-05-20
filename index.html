@@ -35,7 +35,6 @@
 
   #date { font-size: 0.9rem; font-weight: bold; color: #fff; margin-bottom: 8px; display: block; text-shadow: 1px 1px 2px rgba(0,0,0,0.3); }
   
-  /* 変更点：文字を赤に、3Dシャドウを白に逆転！ポップで強力な視認性 */
   h2 { 
     font-size: 1.45rem; 
     font-weight: 950; 
@@ -140,7 +139,8 @@
     <label class="item"><input type="checkbox" id="t8" class="cb cb-top"><span><small class="app-tag">Higher</small>はしご乗り🔴 [３回]</span></label>
     
     <div class="section-title">スキマ時間に…のんびりゲット</div>
-    <label class="item"><input type="checkbox" id="t9" class="cb"><span><small class="app-tag">Fancast</small>広告視聴💙 [視聴ボタン３個×２０]<span class="note">※１回ごとに１０分インターバル</span></span></label>
+    <!-- 変更点：Fancastのテキストを「視聴ボタン３つ×２０回」に変更 -->
+    <label class="item"><input type="checkbox" id="t9" class="cb"><span><small class="app-tag">Fancast</small>広告視聴💙 [視聴ボタン３つ×２０回]<span class="note">※１回ごとに１０分インターバル</span></span></label>
     <label class="item"><input type="checkbox" id="t10" class="cb"><span><small class="app-tag">Higher</small>広告視聴🔴 [５０回]<span class="note">※１0回ごとに５分インターバル</span></span></label>
     <label class="item"><input type="checkbox" id="t11" class="cb"><span><small class="app-tag">mubeat</small>広告視聴💗 [１５回]<span class="note">※１回ごとに１０秒インターバル</span></span></label>
     <label class="item"><input type="checkbox" id="t12" class="cb"><span><small class="app-tag">LiNC</small>広告視聴💜 [３０回]<span class="note">※１回ごとに１分インターバル</span></span></label>
@@ -188,7 +188,6 @@
       }
     });
 
-    // 1. 【最優先】全体コンプリート判定（コンプリート時は文字を赤ではなくゴールドに戻すとお祝い感が出ます）
     if(ok === cbs.length) {
       box.classList.add('all-completed');
       title.style.color = '#fff';
@@ -201,7 +200,6 @@
       title.innerHTML = "投票アイテムをあつめよう！";
     }
 
-    // 2. 前半（きょうの推しごと）コンプリート判定
     if (fire && topOk === topCbs.length && ok !== cbs.length) {
       if (localStorage.getItem(K_HALF) !== '1') {
         localStorage.setItem(K_HALF, '1');
