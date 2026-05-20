@@ -164,6 +164,16 @@
       }
     });
 
+    // 1. 【最優先】全体コンプリート判定
+    if(ok === cbs.length) {
+      box.classList.add('all-completed');
+      title.innerHTML = "✨ COMPLETE ✨<br>おつかれさまでした！";
+    } else {
+      box.classList.remove('all-completed');
+      title.innerHTML = "投票アイテムを<br>集めよう！";
+    }
+
+    // 2. 前半（きょうの推しごと）コンプリート判定
     if (fire && topOk === topCbs.length && ok !== cbs.length) {
       if (localStorage.getItem(K_HALF) !== '1') {
         localStorage.setItem(K_HALF, '1');
@@ -172,14 +182,6 @@
     }
     if (topOk < topCbs.length) {
       localStorage.removeItem(K_HALF);
-    }
-
-    if(ok === cbs.length) {
-      box.classList.add('all-completed');
-      title.innerHTML = "✨ COMPLETE ✨<br>おつかれさまでした！";
-    } else {
-      box.classList.remove('all-completed');
-      title.innerHTML = "投票アイテムを<br>集めよう！";
     }
   };
 
